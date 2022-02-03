@@ -32,18 +32,12 @@ mixin _$AppThemeController on _AppThemeControllerBase, Store {
     });
   }
 
-  final _$_AppThemeControllerBaseActionController =
-      ActionController(name: '_AppThemeControllerBase');
+  final _$setThemeModeAsyncAction =
+      AsyncAction('_AppThemeControllerBase.setThemeMode');
 
   @override
-  void setThemeMode(ThemeMode? themeMode) {
-    final _$actionInfo = _$_AppThemeControllerBaseActionController.startAction(
-        name: '_AppThemeControllerBase.setThemeMode');
-    try {
-      return super.setThemeMode(themeMode);
-    } finally {
-      _$_AppThemeControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> setThemeMode(ThemeMode? themeMode) {
+    return _$setThemeModeAsyncAction.run(() => super.setThemeMode(themeMode));
   }
 
   @override

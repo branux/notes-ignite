@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 import '/core/core.dart';
 import '/domain/login/model/user_model.dart';
 import '/domain/login/usecase/login_usecase.dart';
@@ -8,8 +9,8 @@ import '/modules/login/login_state.dart';
 part 'login_controller.g.dart';
 
 class LoginController extends _LoginControllerBase with _$LoginController {
-  LoginController({required LoginUseCase loginUseCase}) {
-    this.loginUseCase = loginUseCase;
+  LoginController({LoginUseCase? loginUseCase}) {
+    this.loginUseCase = loginUseCase ?? LoginUseCaseImpl();
   }
 }
 
@@ -37,9 +38,9 @@ abstract class _LoginControllerBase with Store {
   void showSnackBar(BuildContext context) {
     SnackBar snackBar = SnackBar(
       content: Text(
-        "Erro no login: ${(loginState as LoginStateFailure).message}",
+        I18nConst.textErroSnackbar([(loginState as LoginStateFailure).message]),
         textAlign: TextAlign.center,
-        style: AppTheme.textStyles.example,
+        style: AppTheme.textStyles.textSnackBar,
       ),
       backgroundColor: Colors.red,
     );
@@ -56,7 +57,7 @@ abstract class _LoginControllerBase with Store {
       } else if (loginState is LoginStateSuccess) {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          RouterClass.erro,
+          RouterClass.notes,
           (Route<dynamic> route) => false,
           arguments: (loginState as LoginStateSuccess).user,
         );

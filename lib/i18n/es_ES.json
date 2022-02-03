@@ -1,0 +1,14 @@
+{
+  "text-login":"Toma notas de tus estudios",
+  "text-erro-snackbar": "Error de inicio de sesión: %s",
+  "text-button-apple":"Sigue con Apple",
+  "text-button-google":"Sigue con Google",
+  "text-tooltip-apple":"Haga clic aquí para iniciar sesión con su cuenta de Apple",
+  "text-tooltip-google":"Haga clic aquí para iniciar sesión con su cuenta de Google",
+  "erro-config-app": "No se pudo inicializar la configuración de la aplicación",
+  "erro-route": "No hay una ruta definida para %s",
+  "login-null": "El retorno de Google es nulo",
+  "login-not-found": "No hay usuario",
+  "login-erro-add": "Error al agregar usuario: %s",
+  "add-icon":"Adicionar"
+}

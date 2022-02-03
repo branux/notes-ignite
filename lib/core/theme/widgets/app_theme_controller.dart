@@ -27,18 +27,18 @@ abstract class _AppThemeControllerBase with Store {
     if (_themeMode != null) {
       return _themeMode!;
     } else {
-      return ThemeMode.system;
+      return ThemeMode.light;
     }
   }
 
   // SETA O TEMA NOVO QUANDO O USUARIO MUDAR
   // CASO TENHA ALGUM PROBLEMA SETA O TEMA COMO LIGHT
   @action
-  void setThemeMode(ThemeMode? themeMode) {
+  Future<void> setThemeMode(ThemeMode? themeMode) async {
     if (themeMode != null) {
-      saveThemeMode(themeMode);
+      await saveThemeMode(themeMode);
     } else {
-      saveThemeMode(ThemeMode.system);
+      await saveThemeMode(ThemeMode.light);
     }
   }
 
@@ -53,17 +53,18 @@ abstract class _AppThemeControllerBase with Store {
   // PEGA O TEMA CASO EXISTA NO SHARED PREFERENCES
   Future<void> currentThemeMode() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
+    //instance.clear();
     if (instance.containsKey("themeMode")) {
       int index = int.parse(instance.get("themeMode") as String);
       if (index == ThemeMode.dark.index) {
-        setThemeMode(ThemeMode.dark);
+        await setThemeMode(ThemeMode.dark);
       } else if (index == ThemeMode.light.index) {
-        setThemeMode(ThemeMode.light);
+        await setThemeMode(ThemeMode.light);
       } else if (index == ThemeMode.system.index) {
-        setThemeMode(ThemeMode.system);
+        await setThemeMode(ThemeMode.system);
       }
     } else {
-      setThemeMode(null);
+      await setThemeMode(null);
     }
   }
 }

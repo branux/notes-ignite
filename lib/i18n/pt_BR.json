@@ -1,0 +1,14 @@
+{
+  "text-login":"Faça anotações dos seus estudos",
+  "text-erro-snackbar": "Erro no login: %s",
+  "text-button-apple":"Entrar com Apple",
+  "text-button-google":"Entrar com Google",  
+  "text-tooltip-apple":"Clique aqui para entrar com sua conta Apple",
+  "text-tooltip-google":"Clique aqui para entrar com sua conta Google",
+  "erro-config-app": "Não foi possível inicializar as configurações do APP",
+  "erro-route": "Não há rota definida para %s",
+  "login-null": "Retorno da google está nulo",
+  "login-not-found": "Não existe usuário",
+  "login-erro-add": "Erro ao adicionar o usuário: %s",
+  "add-icon":"Adicionar"
+}

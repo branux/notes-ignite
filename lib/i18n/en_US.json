@@ -1,0 +1,14 @@
+{
+  "text-login":"Make notes of your studies",
+  "text-erro-snackbar": "Login error: %s",
+  "text-button-apple":"Sign in with Apple",
+  "text-button-google":"Sign in with Google",  
+  "text-tooltip-apple":"Click here to sign in with your Apple account",
+  "text-tooltip-google":"Click here to sign in with your Google account",
+  "erro-config-app": "Unable to initialize APP settings",
+  "erro-route": "There is no route defined for %s",
+  "login-null": "Return from google is null",
+  "login-not-found": "No user exists",
+  "login-erro-add": "Error adding user: %s",
+  "add-icon":"Add"
+}

@@ -13,31 +13,36 @@ class AppConfigController {
   factory AppConfigController() => _instance;
 
   //initialize variables in here
-  AppConfigController._internal() {
-    appInicialized = true;
-  }
-
-  late bool appInicialized;
+  AppConfigController._internal() {}
 
   AppThemeController controllerAppTheme = AppThemeController();
   VersionInfo versionInfo = VersionInfo();
 
-  void colorStatus({required bool isWhite}) {
+  SystemUiOverlayStyle colorStatus({required bool isWhite}) {
+    if (controllerAppTheme.themeMode == ThemeMode.dark && !isWhite) {
+      isWhite = true;
+    }
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // cor da barra superior
       statusBarIconBrightness: isWhite
           ? Brightness.light
           : Brightness.dark, // ícones da barra superior
     ));
+    return isWhite ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
   }
 
-  Future<void> initialConfiguration() async {
+  Future<bool> initialConfiguration() async {
     // INICIA O FIREBASE
     // await Firebase.initializeApp(
     //   options: DefaultFirebaseOptions.currentPlatform,
     // );
     // INICIA AS CORES DO TEMA
-    await controllerAppTheme.currentThemeMode();
+    try {
+      await controllerAppTheme.currentThemeMode();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
 

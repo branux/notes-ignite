@@ -1,4 +1,5 @@
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 
 class ApiLoginDatasource {
   // LOGAR COM GOOGLE - USA FUNÇÕES PARA SE CONECTAR COM O GOOGLE SIGN IN
@@ -14,7 +15,7 @@ class ApiLoginDatasource {
       if (user != null) {
         return user;
       } else {
-        throw "Retorno da google está nulo";
+        throw I18nConst.loginNull;
       }
     } catch (error) {
       rethrow;

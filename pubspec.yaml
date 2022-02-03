@@ -27,7 +27,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
@@ -43,6 +46,11 @@ dependencies:
   google_sign_in: ^5.2.3
   intl: ^0.17.0
   mocktail: ^0.0.1-dev.12
+  flutter_slidable: ^1.2.0  
+  localization: ^2.0.0+1
+  flutter_colorpicker: ^1.0.3
+  uuid: ^3.0.5
+  share_plus: ^3.0.4
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +81,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - lib/i18n/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

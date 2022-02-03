@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '/core/core.dart';
-import 'package:sizer/sizer.dart';
 import '/modules/splash/splash_controller.dart';
-
-import 'widgets/box_gradient_widget.dart';
 
 class SplashPage extends StatefulWidget {
   final bool redirect;
@@ -17,74 +14,61 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   final SplashController splashController = SplashController();
+  final AppConfigController configController = AppConfigController();
+  late AnimationController animationControllerScale;
+  late AnimationController animationControllerTranslate;
 
   @override
   void initState() {
+    animationControllerScale = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+    )..repeat(reverse: true);
+    animationControllerTranslate = AnimationController(
+      duration: const Duration(milliseconds: 1800),
+      vsync: this,
+    )..forward();
+
     // REDIRECIONAMENTO PARA LOGIN-PAGE
     if (widget.redirect) splashController.redirectSplash(context);
     super.initState();
   }
 
   @override
+  void dispose() {
+    animationControllerScale.dispose();
+    animationControllerTranslate.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    configController.colorStatus(isWhite: true);
     return Container(
       decoration: BoxDecoration(gradient: AppTheme.gradients.background),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 9.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BoxGradientWidget(
-                        width: 52.w,
-                        height: 14.h,
-                      ),
-                      SizedBox(
-                        height: 2.h,
-                      ),
-                      BoxGradientWidget(
-                        height: 9.h,
-                        width: 30.w,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      BoxGradientWidget(
-                        height: 9.h,
-                        width: 30.w,
-                        invert: true,
-                      ),
-                      SizedBox(
-                        height: 2.h,
-                      ),
-                      BoxGradientWidget(
-                        width: 52.w,
-                        height: 14.h,
-                        invert: true,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+        body: ScaleTransition(
+          scale: Tween<double>(begin: .85, end: 1).animate(
+            CurvedAnimation(
+              parent: animationControllerScale,
+              curve: const Interval(0, 1, curve: Curves.linear),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32.w),
-              child: Center(
-                child: Image.asset(AppTheme.images.logo),
-              ),
-            )
-          ],
+          ),
+          child: RotationTransition(
+            turns: Tween<double>(
+              begin: 0,
+              end: 1,
+            ).animate(CurvedAnimation(
+              parent: animationControllerTranslate,
+              curve: const Interval(0.1, 1, curve: Curves.bounceOut),
+            )),
+            child: Center(
+              child: Image.asset(AppTheme.images.logo),
+            ),
+          ),
         ),
       ),
     );

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import '/core/core.dart';
 
 class ButtonSocialWidget extends StatefulWidget {
   final String? imagePath;
+  final String? tooltip;
   final IconData? icon;
   final Color? colorIcon;
   final VoidCallback? onTap;
@@ -14,6 +16,7 @@ class ButtonSocialWidget extends StatefulWidget {
     this.onTap,
     required this.text,
     this.colorIcon,
+    this.tooltip,
   }) : super(key: key);
 
   @override
@@ -54,33 +57,41 @@ class _ButtonSocialWidgetState extends State<ButtonSocialWidget> {
   @override
   Widget build(BuildContext context) {
     configWidget();
-    return InkWell(
-      onTap: widget.onTap,
-      child: IntrinsicHeight(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: AppTheme.colors.border),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: iconButton,
+    return Material(
+      color: AppTheme.colors.background,
+      child: Tooltip(
+        message: widget.tooltip ?? "",
+        margin: EdgeInsets.symmetric(horizontal: 5.w),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        child: InkWell(
+          onTap: widget.onTap,
+          child: IntrinsicHeight(
+            child: Ink(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppTheme.colors.border),
+                borderRadius: BorderRadius.circular(5),
               ),
-              VerticalDivider(
-                thickness: 1,
-                width: 1,
-                color: AppTheme.colors.border,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: iconButton,
+                  ),
+                  VerticalDivider(
+                    thickness: 1,
+                    width: 1,
+                    color: AppTheme.colors.border,
+                  ),
+                  Expanded(
+                    child: Text(
+                      widget.text,
+                      style: AppTheme.textStyles.textSimple,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: Text(
-                  widget.text,
-                  style: AppTheme.textStyles.textSimple,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
