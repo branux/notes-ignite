@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sizer/sizer.dart';
 
 import '../core.dart';
 
 abstract class AppTextStyles {
   TextStyle get textGradient;
   TextStyle get textAppBar;
+  TextStyle get textTooltip;
   TextStyle get textSimple;
   TextStyle get textTitle;
   TextStyle get textSubtitle;
@@ -15,14 +17,20 @@ abstract class AppTextStyles {
   TextStyle get textSelect;
   TextStyle get textSnackBar;
   TextStyle get textAlertDialog;
+
+  /*---------------TEXTSTYLE SETTINGS---------------*/
+  TextStyle get appBarTitleSettings;
+  TextStyle get bodyCardTitleSettings;
+  TextStyle get bodyCardSubtitleSettings;
+  TextStyle get bodyButtomTitleSettings;
+  TextStyle get bodyTitleSettings;
 }
 
 class AppTextStylesDefault implements AppTextStyles {
   @override
   TextStyle get textGradient => GoogleFonts.montserrat(
-        fontSize: 40,
+        fontSize: 32.sp,
         fontWeight: FontWeight.w700,
-        height: 45 / 40,
         foreground: Paint()
           ..shader = AppTheme.gradients.textGradient
               .createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
@@ -30,78 +38,129 @@ class AppTextStylesDefault implements AppTextStyles {
 
   @override
   TextStyle get textAlertDialog => GoogleFonts.inter(
-        fontSize: 18,
+        fontSize: 16.sp,
         fontWeight: FontWeight.w700,
-        color: AppTheme.colors.textSimple,
-      );
-  @override
-  TextStyle get textSimple => GoogleFonts.inter(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        height: 19.4 / 16,
         color: AppTheme.colors.textSimple,
       );
 
   @override
+  TextStyle get textSimple => GoogleFonts.inter(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w400,
+        color: AppTheme.colors.textSimple,
+      );
+
+  @override
+  TextStyle get textTooltip => GoogleFonts.inter(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w400,
+        color: Colors.white,
+      );
+
+  @override
   TextStyle get textAppBar => GoogleFonts.montserrat(
-        fontSize: 24,
+        fontSize: 18.sp,
         fontWeight: FontWeight.w700,
-        height: 26 / 24,
         color: AppTheme.colors.textGradient,
       );
 
   @override
   TextStyle get textTitle => GoogleFonts.inter(
-        fontSize: 16,
+        fontSize: 12.sp,
         fontWeight: FontWeight.w700,
-        height: 19.4 / 16,
         color: AppTheme.colors.textTitle,
       );
 
   @override
   TextStyle get textSubtitle => GoogleFonts.inter(
-        fontSize: 12,
+        fontSize: 10.sp,
         fontWeight: FontWeight.w400,
-        height: 18 / 12,
         color: AppTheme.colors.textSubtitle,
       );
 
   @override
   TextStyle get textButton => GoogleFonts.inter(
-        fontSize: 12,
+        fontSize: 10.sp,
         fontWeight: FontWeight.w400,
-        color: AppTheme.colors.textSubtitle,
+        color: AppTheme.colors.textButton,
       );
 
   @override
   TextStyle get textSubtitleOpacity => GoogleFonts.inter(
-        fontSize: 12,
+        fontSize: 9.sp,
         fontWeight: FontWeight.w400,
-        height: 18 / 12,
         color: AppTheme.colors.textSubtitleOpacity,
       );
 
   @override
   TextStyle get buttonColor => GoogleFonts.inter(
-        fontSize: 15,
+        fontSize: 12.sp,
         fontWeight: FontWeight.w400,
-        height: 18 / 15,
         color: AppTheme.colors.textTitle,
       );
 
   @override
   TextStyle get textSelect => GoogleFonts.inter(
-        fontSize: 10,
+        fontSize: 8.sp,
         fontWeight: FontWeight.w600,
-        height: 15 / 10,
         color: AppTheme.colors.textSimple,
       );
 
   @override
   TextStyle get textSnackBar => GoogleFonts.inter(
-        fontSize: 16,
+        fontSize: 12.sp,
         fontWeight: FontWeight.w600,
-        height: 19 / 16,
         color: Colors.white,
       );
+
+  /*---------------TEXTSTYLE SETTINGS---------------*/
+  @override
+  TextStyle get appBarTitleSettings {
+    return GoogleFonts.notoSans(
+      fontSize: 24.sp,
+      fontWeight: FontWeight.w700,
+      height: 35.sp / 24.sp,
+      color: AppTheme.colors.appBarTitleSettings,
+    );
+  }
+
+  @override
+  TextStyle get bodyButtomTitleSettings {
+    return GoogleFonts.notoSans(
+      fontSize: 15.sp,
+      fontWeight: FontWeight.w600,
+      height: 22.sp / 15.sp,
+      color: AppTheme.colors.bodyCardTitleSettings,
+    );
+  }
+
+  @override
+  TextStyle get bodyCardSubtitleSettings {
+    return GoogleFonts.notoSans(
+      fontSize: 12.sp,
+      fontWeight: FontWeight.w600,
+      height: 18.sp / 12.sp,
+      color: AppTheme.colors.bodyCardSubtitleSettings,
+    );
+  }
+
+  @override
+  TextStyle get bodyCardTitleSettings {
+    return GoogleFonts.notoSans(
+      fontSize: 20.sp,
+      fontWeight: FontWeight.w600,
+      height: 30.sp / 20.sp,
+      color: AppTheme.colors.bodyCardTitleSettings,
+    );
+  }
+
+  @override
+  TextStyle get bodyTitleSettings {
+    return GoogleFonts.notoSans(
+      fontSize: 12.sp,
+      fontWeight: FontWeight.w700,
+      height: 18.sp / 12.sp,
+      color: AppTheme.colors.bodyTitleSettings,
+    );
+  }
 }

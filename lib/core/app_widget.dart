@@ -9,7 +9,7 @@ import 'core.dart';
 // ADICIONA O TEMA, AS ROTAS E O NOME DA APLICAÇÃO
 // CONTROLA O SIZE DO APLICATIVO
 class AppWidget extends StatefulWidget {
-  AppWidget({Key? key}) : super(key: key);
+  const AppWidget({Key? key}) : super(key: key);
 
   @override
   State<AppWidget> createState() => _AppWidgetState();

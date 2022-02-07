@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_ignite/domain/note/model/importance_model.dart';
 
 import '../dropdown_button/dropdown_button_widget.dart';
 import '/core/core.dart';
@@ -25,14 +26,9 @@ class DropdownSelectNoteWidget extends StatelessWidget {
         padding: const EdgeInsets.only(left: 10, right: 5, top: 4, bottom: 4),
         child: DropdownButtonWidget(
           dropdownvalue: dropdownvalue,
-          items: [
-            "Sem importancia",
-            "Pouco importancia",
-            "Média importancia",
-            "Alta importancia",
-            "Importantissimo"
-          ].map((String item) {
-            return DropdownMenuItem(value: item, child: Text(item));
+          items: ImportanceModel.listImportances().map((ImportanceModel item) {
+            print(item);
+            return DropdownMenuItem(value: item.id, child: Text(item.text));
           }).toList(),
           onChanged: onChanged,
         ));

@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:notes_ignite/domain/login/model/user_model.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/note_model.dart';
@@ -19,7 +21,7 @@ class NoteRepository {
       final SharedPreferences instance = await SharedPreferences.getInstance();
       String? response = instance.getString(key);
       return response == null
-          ? throw "Não foi possivel localizar essa nota"
+          ? throw I18nConst.notLocalizedNote
           : NoteModel.fromJson(response);
     } catch (e) {
       rethrow;
@@ -46,13 +48,13 @@ class NoteRepository {
     }
   }
 
-  Future<List<String>> keys() async {
+  Future<List<String>> keys({required UserModel user}) async {
     try {
       final SharedPreferences instance = await SharedPreferences.getInstance();
       Set<String> keys = instance.getKeys();
       List<String> keysList = [];
       for (String key in keys) {
-        if (key.contains("note")) keysList.add(key);
+        if (key.contains("note") && key.contains(user.id)) keysList.add(key);
       }
       return keysList;
     } catch (e) {

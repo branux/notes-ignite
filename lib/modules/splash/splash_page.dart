@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import '/core/core.dart';
 import '/modules/splash/splash_controller.dart';
 
@@ -45,6 +46,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    double width = Orientation.portrait == orientation ? (100.w) : (112.h);
     configController.colorStatus(isWhite: true);
     return Container(
       decoration: BoxDecoration(gradient: AppTheme.gradients.background),
@@ -66,7 +69,15 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
               curve: const Interval(0.1, 1, curve: Curves.bounceOut),
             )),
             child: Center(
-              child: Image.asset(AppTheme.images.logo),
+              child: Container(
+                width: double.maxFinite,
+                height: double.maxFinite,
+                padding: EdgeInsets.symmetric(horizontal: width * 0.35),
+                child: Image.asset(
+                  AppTheme.images.logo,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
         ),

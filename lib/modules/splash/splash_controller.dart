@@ -10,7 +10,6 @@ class SplashController {
   void redirectSplash(BuildContext context) async {
     try {
       UserModel user = await loginUseCase.isConnectGoogle();
-      print("Aq2");
       Future.delayed(const Duration(seconds: 3)).then((_) {
         Navigator.pushNamedAndRemoveUntil(
           context,

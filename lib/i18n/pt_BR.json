@@ -10,5 +10,37 @@
   "login-null": "Retorno da google está nulo",
   "login-not-found": "Não existe usuário",
   "login-erro-add": "Erro ao adicionar o usuário: %s",
-  "add-icon":"Adicionar"
+  "add-icon":"Adicionar", 
+  "title":"Título",
+  "create-in":"Criado em",
+  "deleted-item-success":"Item deletado com sucesso",
+  "deleted-item-failed":"Falha ao remover o item",
+  "menu-about":"Sobre",
+  "menu-settings":"Configurações",
+  "menu-logout":"Sair",
+  "delete":"Excluir",
+  "shared":"Compartilhar",
+  "edit":"Editar",
+
+  
+  "hint-title":"Digite aqui o título",
+  "note":"Nota",
+  "hint-note":"Digite aqui a nota",
+  "cancel":"Cancelar",
+  "save":"Salvar",
+  "save-success":"Foi salvo com sucesso!",
+  "edit-success":"Foi editado com sucesso!",
+  "save-failed":"Falha ao salvar!",
+  "edit-failed":"Falha ao editar!",
+  "field-required":"Campo obrigatório",
+  "not-importance":"Sem importância",
+  "little-importance":"Pouca importância",
+  "medium-importance":"Média importância",
+  "high-importance":"Alta importância",
+  "very-importance":"Importantíssimo",
+  "colors":"Cores",
+  "choose-color":"Escolha uma cor!",
+  "modify":"Modificar",
+  "not-localized-note":"Não foi possível localizar essa nota!"
+
 }

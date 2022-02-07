@@ -18,8 +18,17 @@ class LoginRepository {
     }
   }
 
+  Future<void> googleSignOut() async {
+    try {
+      return await api.googleSignOut();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<UserModel> authSharedPreferences() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
+
     if (instance.containsKey("user")) {
       String? jsonUser = instance.getString("user");
       if (jsonUser == null) throw I18nConst.loginNotFound;
@@ -32,6 +41,8 @@ class LoginRepository {
 
   Future<bool> authDeleteShared() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
+
+    print("aaaa user aaaa");
     if (instance.containsKey("user")) {
       return await instance.remove("user");
     } else {

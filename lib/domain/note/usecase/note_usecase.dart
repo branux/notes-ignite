@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:notes_ignite/domain/login/model/user_model.dart';
 import 'package:notes_ignite/domain/note/model/note_model.dart';
 
 import '/domain/note/repository/note_repository.dart';
@@ -56,10 +57,10 @@ class NoteUseCase {
     }
   }
 
-  Future<List<NoteModel>> readAllNote() async {
+  Future<List<NoteModel>> readAllNote({required UserModel user}) async {
     List<NoteModel> listNote = [];
     try {
-      List<String> keysList = await repository.keys();
+      List<String> keysList = await repository.keys(user: user);
       for (String key in keysList) {
         listNote.add(await repository.readNote(key: key));
       }
@@ -88,10 +89,10 @@ class NoteUseCase {
     }
   }
 
-  Future<List<String>> deleteAllNote() async {
+  Future<List<String>> deleteAllNote({required UserModel user}) async {
     List<String> listId = [];
     try {
-      List<String> keysList = await repository.keys();
+      List<String> keysList = await repository.keys(user: user);
       for (String key in keysList) {
         bool isDelete = await repository.deleteNote(key: key);
         if (isDelete) listId.add(key);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:notes_ignite/domain/note/model/note_model.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 
 import '/modules/notes/widgets/card_note/card_note_widget.dart';
 
@@ -36,10 +37,10 @@ class SlidableCardWidget extends StatelessWidget {
           SlidableAction(
             onPressed: (context) => onDeleted(context),
             autoClose: true,
-            backgroundColor: Color(0xFFFE4A49),
+            backgroundColor: const Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,
-            label: 'Delete',
+            label: I18nConst.delete,
           ),
         ],
       ),
@@ -49,18 +50,18 @@ class SlidableCardWidget extends StatelessWidget {
           SlidableAction(
             flex: 6,
             onPressed: (context) => onShared(context),
-            backgroundColor: Color(0xFF7BC043),
+            backgroundColor: const Color(0xFF7BC043),
             foregroundColor: Colors.white,
             icon: Icons.share_rounded,
-            label: 'Compartilhar',
+            label: I18nConst.shared,
           ),
           SlidableAction(
             flex: 4,
             onPressed: (context) => onEdit(context),
-            backgroundColor: Color(0xFF0392CF),
+            backgroundColor: const Color(0xFF0392CF),
             foregroundColor: Colors.white,
             icon: Icons.mode_edit_outline,
-            label: 'Editar',
+            label: I18nConst.edit,
           ),
         ],
       ),

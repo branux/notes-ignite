@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 
 import '/core/core.dart';
 
@@ -47,7 +48,7 @@ class _TextFormNoteWidgetState extends State<TextFormNoteWidget> {
         initialValue: widget.initialValue,
         validator: (text) {
           text = text ?? "";
-          return text.isNotEmpty ? null : "Campo obrigatório";
+          return text.isNotEmpty ? null : I18nConst.fieldRequired;
         },
         textAlignVertical: TextAlignVertical.top,
         decoration: InputDecoration(

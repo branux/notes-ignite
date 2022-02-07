@@ -3,6 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:notes_ignite/core/core.dart';
 import 'package:notes_ignite/domain/note/model/note_model.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 
 class AlertDialogNoteWidget extends StatelessWidget {
   final void Function(Color) onPressed;
@@ -21,7 +22,7 @@ class AlertDialogNoteWidget extends StatelessWidget {
       backgroundColor: AppTheme.colors.background,
       scrollable: true,
       title: Text(
-        'Escolha uma cor!',
+        I18nConst.chooseColor,
         style: AppTheme.textStyles.textAlertDialog,
       ),
       content: SizedBox(
@@ -48,7 +49,7 @@ class AlertDialogNoteWidget extends StatelessWidget {
                 BorderSide(color: AppTheme.colors.border, width: 1)),
           ),
           child: Text(
-            'Modificar',
+            I18nConst.modify,
             style: AppTheme.textStyles.textSimple.copyWith(fontSize: 14),
           ),
           onPressed: () => onPressed(pickerColor),

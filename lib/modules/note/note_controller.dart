@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:notes_ignite/core/core.dart';
+import 'package:notes_ignite/domain/login/model/user_model.dart';
 import 'package:notes_ignite/domain/note/model/note_model.dart';
 import 'package:notes_ignite/domain/note/repository/note_repository.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 import 'package:notes_ignite/modules/note/widgets/alert_dialog_note/alert_dialog_note_widget.dart';
 import 'package:uuid/uuid.dart';
 
 part 'note_controller.g.dart';
 
 class NoteController extends _NoteControllerBase with _$NoteController {
-  NoteController() {}
+  NoteController();
 }
 
 abstract class _NoteControllerBase with Store {
@@ -16,6 +19,8 @@ abstract class _NoteControllerBase with Store {
 
   @observable
   NoteModel note = NoteModel.init();
+
+  Color lastColor = AppTheme.colors.colorsPicker.first;
 
   void titleSaved(String? title) => note = note.copyWith(title: title);
 
@@ -25,34 +30,37 @@ abstract class _NoteControllerBase with Store {
     Navigator.pop(context, note.id.isEmpty ? null : note);
   }
 
+  void lastColorSaved() => lastColor = note.background;
+
   @action
-  void createNote(GlobalKey<FormState> formKey, BuildContext context) async {
+  void createNote(GlobalKey<FormState> formKey, BuildContext context,
+      UserModel user) async {
     if (formKey.currentState!.validate()) {
+      bool isNew = note.id.isEmpty;
+      formKey.currentState!.save();
+      note = note.copyWith(data: DateTime.now());
+      note = isNew
+          ? note.copyWith(id: "note" + user.id + const Uuid().v4())
+          : note;
       try {
-        bool isNew = note.id.isEmpty;
-        formKey.currentState!.save();
-        note = note.copyWith(data: DateTime.now());
-        note = isNew ? note.copyWith(id: "note" + const Uuid().v4()) : note;
         bool isCreated = await repository.createNote(note: note);
         if (isCreated) {
           snackBar(
             context,
-            isNew ? "Foi salvo com sucesso!" : "Foi editado com sucesso!",
+            isNew ? I18nConst.saveSuccess : I18nConst.editSuccess,
             Colors.green,
           );
         } else {
           snackBar(
             context,
-            isNew
-                ? "Não foi salvo com sucesso!"
-                : "Não foi editado com sucesso!",
+            isNew ? I18nConst.saveFailed : I18nConst.editFailed,
             Colors.red,
           );
         }
       } catch (e) {
         snackBar(
           context,
-          "Erro ao salvar!",
+          isNew ? I18nConst.saveFailed : I18nConst.editFailed,
           Colors.red,
         );
       }
@@ -62,8 +70,10 @@ abstract class _NoteControllerBase with Store {
   }
 
   @action
-  void modifyCurrentColor(Color color) =>
-      note = note.copyWith(background: color);
+  void modifyCurrentColor(Color color) {
+    lastColor = note.background;
+    note = note.copyWith(background: color);
+  }
 
   @action
   void modifyDropdownvalue(String? value) =>
@@ -75,8 +85,7 @@ abstract class _NoteControllerBase with Store {
       backgroundColor: color,
       duration: const Duration(seconds: 3),
       content: Text(text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white)),
+          textAlign: TextAlign.center, style: AppTheme.textStyles.textSnackBar),
     ));
   }
 

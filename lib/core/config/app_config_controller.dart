@@ -13,7 +13,7 @@ class AppConfigController {
   factory AppConfigController() => _instance;
 
   //initialize variables in here
-  AppConfigController._internal() {}
+  AppConfigController._internal();
 
   AppThemeController controllerAppTheme = AppThemeController();
   VersionInfo versionInfo = VersionInfo();

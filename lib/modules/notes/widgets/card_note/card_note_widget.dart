@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_ignite/domain/note/model/importance_model.dart';
 import '/core/core.dart';
 import '/domain/note/model/note_model.dart';
 
@@ -39,7 +40,7 @@ class CardNoteWidget extends StatelessWidget {
                 )),
                 Flexible(
                   child: Text(
-                    note.important,
+                    ImportanceModel.textImportance(note.important),
                     style: AppTheme.textStyles.textSubtitleOpacity,
                     textAlign: TextAlign.justify,
                   ),
@@ -47,7 +48,7 @@ class CardNoteWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Divider(height: 1, color: AppTheme.colors.divider, thickness: 1),
         ],
       ),

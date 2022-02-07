@@ -28,6 +28,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    double width = Orientation.portrait == orientation ? (100.w) : (105.h);
+    double height = Orientation.portrait == orientation ? (100.h) : (105.w);
     bool dark = configController.controllerAppTheme.themeMode == ThemeMode.dark;
     configController.colorStatus(isWhite: false);
     return Scaffold(
@@ -39,30 +42,41 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Image.asset(AppTheme.images.backgroundLogin)],
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: .10 * height),
+                      child: Image.asset(
+                        AppTheme.images.backgroundLogin,
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: EdgeInsets.symmetric(horizontal: .04 * height),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 41.h),
+                SizedBox(height: .33 * height),
                 SizedBox(
-                  width: 230,
+                  width: .55 * width,
                   child: Text(
                     I18nConst.textLogin,
                     style: AppTheme.textStyles.textGradient,
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: .04 * height),
                 Observer(builder: (context) {
                   Widget button = (_loginController.loginState
                           is LoginStateLoading)
-                      ? const SizedBox(
-                          height: 128,
-                          child: Center(child: CircularProgressIndicator()))
+                      ? SizedBox(
+                          height: .16 * height,
+                          child:
+                              const Center(child: CircularProgressIndicator()))
                       : Column(
                           children: [
                             ButtonSocialWidget(
@@ -74,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ? null
                                   : _loginController.googleSignIn(),
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: .014 * height),
                             ButtonSocialWidget(
                               text: I18nConst.textButtonApple,
                               tooltip: I18nConst.textTooltipApple,

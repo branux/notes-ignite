@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
 import 'package:notes_ignite/core/core.dart';
+import 'package:notes_ignite/domain/login/model/user_model.dart';
 import 'package:notes_ignite/domain/note/model/note_model.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 import 'package:notes_ignite/shared/button_bottom_bar/button_bottom_bar_widget.dart';
 
 import 'note_controller.dart';
@@ -12,7 +15,12 @@ import 'widgets/text_form_note/text_form_note_widget.dart';
 
 class NotePage extends StatefulWidget {
   final NoteModel? noteModel;
-  const NotePage({Key? key, this.noteModel}) : super(key: key);
+  final UserModel user;
+  const NotePage({
+    Key? key,
+    this.noteModel,
+    required this.user,
+  }) : super(key: key);
 
   @override
   _NotePageState createState() => _NotePageState();
@@ -54,8 +62,8 @@ class _NotePageState extends State<NotePage> {
                 child: Column(
                   children: [
                     TextFormNoteWidget(
-                      labelText: "Titulo",
-                      hintText: "Digite aqui o titulo",
+                      labelText: I18nConst.title,
+                      hintText: I18nConst.hintTitle,
                       initialValue: widget.noteModel?.title,
                       onSaved: (title) => noteController.titleSaved(title),
                     ),
@@ -64,12 +72,16 @@ class _NotePageState extends State<NotePage> {
                       child: Row(
                         children: [
                           Observer(builder: (context) {
-                            return ColorButtonNoteWidget(
+                            Widget button = ColorButtonNoteWidget(
+                              key: UniqueKey(),
                               onPressed: () =>
                                   noteController.showDialogNote(context),
-                              color: noteController.note.background,
+                              colorInit: noteController.lastColor,
+                              colorFinal: noteController.note.background,
                               expanded: true,
                             );
+                            noteController.lastColorSaved();
+                            return button;
                           }),
                           const SizedBox(width: 18),
                           Observer(builder: (context) {
@@ -90,8 +102,8 @@ class _NotePageState extends State<NotePage> {
                       maxLines: null,
                       minLines: null,
                       initialValue: widget.noteModel?.text,
-                      labelText: "Nota",
-                      hintText: "Digite aqui a nota",
+                      labelText: I18nConst.note,
+                      hintText: I18nConst.hintNote,
                       onSaved: (text) => noteController.textSaved(text),
                     ),
                     const SizedBox(height: 20),
@@ -105,7 +117,7 @@ class _NotePageState extends State<NotePage> {
                 children: [
                   Observer(builder: (context) {
                     return ButtonBottomBarWidget(
-                      label: "CANCELAR",
+                      label: I18nConst.cancel.toUpperCase(),
                       onPressed: () => noteController.popController(context),
                       expanded: true,
                     );
@@ -116,10 +128,12 @@ class _NotePageState extends State<NotePage> {
                     NoteModel note = noteController.note;
                     bool isSave = note.id == "";
                     return ButtonBottomBarWidget(
-                      label: isSave ? "SALVAR" : "EDITAR",
+                      label: isSave
+                          ? I18nConst.save.toUpperCase()
+                          : I18nConst.edit.toUpperCase(),
                       key: UniqueKey(),
-                      onPressed: () =>
-                          noteController.createNote(_formKey, context),
+                      onPressed: () => noteController.createNote(
+                          _formKey, context, widget.user),
                       expanded: true,
                     );
                   }),

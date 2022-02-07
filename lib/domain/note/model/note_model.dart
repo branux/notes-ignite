@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_ignite/core/core.dart';
+import 'package:notes_ignite/domain/note/model/importance_model.dart';
 
 class NoteModel {
   final String id;
@@ -69,7 +70,7 @@ class NoteModel {
       text: '',
       background: AppTheme.colors.colorsPicker.first,
       data: DateTime.now(),
-      important: "Média importancia",
+      important: ImportanceModel.initialIdImportance(),
     );
   }
 

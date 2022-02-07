@@ -53,7 +53,7 @@ abstract class _AppThemeControllerBase with Store {
   // PEGA O TEMA CASO EXISTA NO SHARED PREFERENCES
   Future<void> currentThemeMode() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
-    //instance.clear();
+    instance.clear();
     if (instance.containsKey("themeMode")) {
       int index = int.parse(instance.get("themeMode") as String);
       if (index == ThemeMode.dark.index) {

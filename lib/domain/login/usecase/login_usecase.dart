@@ -5,6 +5,7 @@ abstract class LoginUseCase {
   Future<UserModel> googleSignIn();
   Future<bool> signOutGoogle();
   Future<UserModel> isConnectGoogle();
+  void dispose();
 }
 
 class LoginUseCaseImpl implements LoginUseCase {
@@ -28,8 +29,12 @@ class LoginUseCaseImpl implements LoginUseCase {
   @override
   Future<bool> signOutGoogle() async {
     try {
+      await repository.googleSignOut();
+
       return await repository.authDeleteShared();
     } catch (e) {
+      print("aaaa user aaaa");
+      print(e);
       return false;
     }
   }
@@ -44,6 +49,7 @@ class LoginUseCaseImpl implements LoginUseCase {
     }
   }
 
+  @override
   void dispose() {
     repository.dispose();
   }

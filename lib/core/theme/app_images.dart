@@ -3,6 +3,7 @@ abstract class AppImages {
   String get iconGoogle;
   String get iconApple;
   String get logo;
+  String get note;
 }
 
 class AppImagesLight implements AppImages {
@@ -17,6 +18,9 @@ class AppImagesLight implements AppImages {
 
   @override
   String get logo => "assets/images/logo.png";
+
+  @override
+  String get note => "assets/images/note_light.png";
 }
 
 class AppImagesDark extends AppImagesLight {
@@ -25,4 +29,7 @@ class AppImagesDark extends AppImagesLight {
 
   @override
   String get iconApple => "assets/images/apple-icon-dark.png";
+
+  @override
+  String get note => "assets/images/note_dark.png";
 }

@@ -27,59 +27,71 @@ class _ButtonSocialWidgetState extends State<ButtonSocialWidget> {
   late Widget iconButton;
 
   void configWidget() {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    double width = Orientation.portrait == orientation ? (100.w) : (105.h);
+    double height = Orientation.portrait == orientation ? (100.h) : (105.w);
+
     if (widget.imagePath != null) {
       iconButton = Image.asset(
         widget.imagePath!,
-        width: 24,
+        width: 5.w,
         color: widget.colorIcon,
       );
     } else if (widget.icon != null) {
       iconButton = Icon(
         widget.icon!,
-        size: 24,
+        size: 5.w,
         color: widget.colorIcon,
       );
     } else {
       iconButton = Icon(
         Icons.account_circle_outlined,
-        size: 24,
+        size: 5.w,
         color: widget.colorIcon,
       );
     }
   }
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     configWidget();
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    double width = Orientation.portrait == orientation ? (100.w) : (105.h);
+    double height = Orientation.portrait == orientation ? (100.h) : (105.w);
     configWidget();
     return Material(
       color: AppTheme.colors.background,
       child: Tooltip(
         message: widget.tooltip ?? "",
-        margin: EdgeInsets.symmetric(horizontal: 5.w),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        textStyle: AppTheme.textStyles.textTooltip,
+        margin: EdgeInsets.symmetric(horizontal: .09 * width),
+        padding: EdgeInsets.symmetric(
+            vertical: .012 * height, horizontal: .026 * width),
         child: InkWell(
           onTap: widget.onTap,
           child: IntrinsicHeight(
             child: Ink(
               decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.colors.border),
+                border: Border.all(
+                  color: AppTheme.colors.border,
+                  width: .35.w,
+                ),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(2.6.w),
                     child: iconButton,
                   ),
                   VerticalDivider(
-                    thickness: 1,
-                    width: 1,
+                    thickness: .35.w,
+                    width: .35.w,
                     color: AppTheme.colors.border,
                   ),
                   Expanded(
