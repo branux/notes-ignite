@@ -9,13 +9,13 @@ import '/modules/login/login_state.dart';
 part 'login_controller.g.dart';
 
 class LoginController extends _LoginControllerBase with _$LoginController {
-  LoginController({LoginUseCase? loginUseCase}) {
-    this.loginUseCase = loginUseCase ?? LoginUseCaseImpl();
+  LoginController({ILoginUseCase? loginUseCase}) {
+    _loginUseCase = loginUseCase ?? LoginUseCase();
   }
 }
 
 abstract class _LoginControllerBase with Store {
-  late LoginUseCase loginUseCase;
+  late ILoginUseCase _loginUseCase;
   @observable
   LoginState loginState = LoginStateEmpty();
 
@@ -25,7 +25,7 @@ abstract class _LoginControllerBase with Store {
     try {
       // LOGAR COM GOOGLE
       loginState = LoginStateLoading();
-      UserModel userModel = await loginUseCase.googleSignIn();
+      UserModel userModel = await _loginUseCase.googleSignIn();
       await Future.delayed(const Duration(seconds: 2));
       loginState = LoginStateSuccess(user: userModel);
     } catch (error) {

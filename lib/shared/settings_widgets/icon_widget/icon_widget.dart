@@ -20,11 +20,11 @@ class IconWidget extends StatelessWidget {
         color: backgroundColor,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(7),
+        padding: const EdgeInsets.all(8),
         child: Icon(
           icon,
           color: color ?? AppTheme.colors.bodyIconColorSettings,
-          size: 30,
+          size: 32,
         ),
       ),
     );

@@ -12,6 +12,7 @@ class SimpleSettingsTile extends StatelessWidget {
   final TextStyle? style;
 
   const SimpleSettingsTile({
+    Key? key,
     required this.title,
     this.subtitle = "",
     this.child,
@@ -19,7 +20,7 @@ class SimpleSettingsTile extends StatelessWidget {
     required this.leading,
     required this.onTap,
     this.style,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class SettingsTile extends StatefulWidget {
   final String subtitle;
   final bool enabled;
   final Widget child;
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
   final bool showChildBelow;
   final TextStyle? style;
 
@@ -72,7 +73,7 @@ class SettingsTile extends StatefulWidget {
     this.subtitle = '',
     this.enabled = true,
     required this.child,
-    required this.onTap,
+    this.onTap,
     this.showChildBelow = false,
     this.style,
   }) : super(key: key);

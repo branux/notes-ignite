@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_ignite/core/core.dart';
 import 'package:notes_ignite/domain/login/model/user_model.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 import 'package:notes_ignite/shared/settings_widgets/cart_text_widget/card_text_widget.dart';
 import 'package:sizer/sizer.dart';
 
@@ -15,6 +16,8 @@ class AlertDialogSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double borderWidth = 0.3.w;
+    double borderRadius = 1.w;
     return AlertDialog(
       clipBehavior: Clip.hardEdge,
       backgroundColor: AppTheme.colors.background,
@@ -22,13 +25,13 @@ class AlertDialogSettings extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppTheme.colors.backgroundColor,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
         child: Row(
           children: [
             Flexible(
               child: Text(
-                "Informações do usuário",
-                style: AppTheme.textStyles.textAppBar,
+                I18nConst.infoUser,
+                style: AppTheme.textStyles.titleAlertDialog,
               ),
             ),
           ],
@@ -39,17 +42,17 @@ class AlertDialogSettings extends StatelessWidget {
       content: Scrollbar(
         isAlwaysShown: true,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CardTextWidget(
-                title: "Nome",
+                title: I18nConst.name,
                 subtitle: user.name,
               ),
               SizedBox(height: 1.h),
               CardTextWidget(
-                title: "E-mail",
+                title: I18nConst.email,
                 subtitle: user.email,
               ),
               SizedBox(height: 1.h),
@@ -58,14 +61,17 @@ class AlertDialogSettings extends StatelessWidget {
         ),
       ),
       actions: [
-        ElevatedButton(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text("Sair", style: AppTheme.textStyles.buttonColor),
+        InkWell(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(borderRadius),
+              border:
+                  Border.all(color: AppTheme.colors.border, width: borderWidth),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 1.h),
+            child: Text(I18nConst.quit, style: AppTheme.textStyles.textButton),
           ),
-          onPressed: yesPress,
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.white)),
+          onTap: yesPress,
         ),
       ],
     );

@@ -27,10 +27,6 @@ class _ButtonSocialWidgetState extends State<ButtonSocialWidget> {
   late Widget iconButton;
 
   void configWidget() {
-    Orientation orientation = MediaQuery.of(context).orientation;
-    double width = Orientation.portrait == orientation ? (100.w) : (105.h);
-    double height = Orientation.portrait == orientation ? (100.h) : (105.w);
-
     if (widget.imagePath != null) {
       iconButton = Image.asset(
         widget.imagePath!,
@@ -60,18 +56,14 @@ class _ButtonSocialWidgetState extends State<ButtonSocialWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
-    double width = Orientation.portrait == orientation ? (100.w) : (105.h);
-    double height = Orientation.portrait == orientation ? (100.h) : (105.w);
     configWidget();
     return Material(
       color: AppTheme.colors.background,
       child: Tooltip(
         message: widget.tooltip ?? "",
         textStyle: AppTheme.textStyles.textTooltip,
-        margin: EdgeInsets.symmetric(horizontal: .09 * width),
-        padding: EdgeInsets.symmetric(
-            vertical: .012 * height, horizontal: .026 * width),
+        margin: EdgeInsets.symmetric(horizontal: 9.w),
+        padding: EdgeInsets.symmetric(vertical: 1.2.h, horizontal: 2.6.w),
         child: InkWell(
           onTap: widget.onTap,
           child: IntrinsicHeight(

@@ -24,6 +24,15 @@ mixin _$NoteController on _NoteControllerBase, Store {
     });
   }
 
+  final _$modifyNoteAsyncAction = AsyncAction('_NoteControllerBase.modifyNote');
+
+  @override
+  Future<void> modifyNote(
+      GlobalKey<FormState> formKey, BuildContext context, UserModel user) {
+    return _$modifyNoteAsyncAction
+        .run(() => super.modifyNote(formKey, context, user));
+  }
+
   final _$_NoteControllerBaseActionController =
       ActionController(name: '_NoteControllerBase');
 

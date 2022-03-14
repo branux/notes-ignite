@@ -23,24 +23,13 @@ abstract class _AppThemeControllerBase with Store {
 
   // QUANDO O TEMA É ALTERADO ELE INFORMA TODOS OS OBSERVERS EXTERNOS
   @computed
-  ThemeMode get themeMode {
-    if (_themeMode != null) {
-      return _themeMode!;
-    } else {
-      return ThemeMode.light;
-    }
-  }
+  ThemeMode get themeMode => _themeMode ?? ThemeMode.light;
 
   // SETA O TEMA NOVO QUANDO O USUARIO MUDAR
   // CASO TENHA ALGUM PROBLEMA SETA O TEMA COMO LIGHT
   @action
-  Future<void> setThemeMode(ThemeMode? themeMode) async {
-    if (themeMode != null) {
-      await saveThemeMode(themeMode);
-    } else {
-      await saveThemeMode(ThemeMode.light);
-    }
-  }
+  Future<void> setThemeMode(ThemeMode? themeMode) async =>
+      saveThemeMode(themeMode ?? ThemeMode.light);
 
   // ALTERA O TEMA SALVO NO SHARED PREFERENCES E MUDA O THEMA NO CONTROLLER
   Future<void> saveThemeMode(ThemeMode themeMode) async {
@@ -53,7 +42,7 @@ abstract class _AppThemeControllerBase with Store {
   // PEGA O TEMA CASO EXISTA NO SHARED PREFERENCES
   Future<void> currentThemeMode() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
-    instance.clear();
+    //instance.clear();
     if (instance.containsKey("themeMode")) {
       int index = int.parse(instance.get("themeMode") as String);
       if (index == ThemeMode.dark.index) {

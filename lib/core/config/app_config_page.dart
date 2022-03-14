@@ -51,7 +51,6 @@ class _AppConfigPageState extends State<AppConfigPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("refezQ");
     return body;
   }
 }

@@ -16,30 +16,32 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
+  final AppConfigController _controllerConfig = AppConfigController();
   final AppThemeController _controller = AppThemeController();
 
   @override
   Widget build(BuildContext context) {
     // SIZER É UM WIDGET QUE DEIXA FAZER TODOS OS TIPOS DE CONTROLE DE LAYOUT
-    print(_controller.themeMode);
+    AppConfigController().colorStatus(isWhite: true);
 
     return Sizer(builder: (context, orientation, deviceType) {
       // OBSERVER VAI FICAR OBSERVANDO AS ALTERAÇÕES DO TEMA
       return Observer(builder: (_) {
+        _controllerConfig.locale;
         return MaterialApp(
           supportedLocales: const [
             Locale('pt', 'BR'),
             Locale('es', 'ES'),
             Locale('en', 'US'),
           ],
-          //DESABILITA O BANNER "DEBUG"
-          debugShowCheckedModeBanner: false,
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
             LocalJsonLocalization.delegate,
           ],
+          //DESABILITA O BANNER "DEBUG"
+          debugShowCheckedModeBanner: false,
           title: "Notes Ignite",
           // CONTROLLER USANDO MOBX PARA O TEMA
           themeMode: _controller.themeMode,

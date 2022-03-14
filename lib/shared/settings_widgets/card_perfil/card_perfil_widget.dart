@@ -15,7 +15,7 @@ class CardPerfilWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 34),
+      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 3.h),
       child: ListTile(
         onTap: callback,
         contentPadding: EdgeInsets.zero,
@@ -26,11 +26,11 @@ class CardPerfilWidget extends StatelessWidget {
               width: 15.w,
               height: 15.w,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
+                borderRadius: BorderRadius.circular(10.w),
                 color: Colors.green.shade400,
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(48),
+                borderRadius: BorderRadius.circular(10.w),
                 child: Image.network(
                   user.photoUrl,
                 ),

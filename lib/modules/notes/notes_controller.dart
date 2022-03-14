@@ -1,11 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notes_ignite/domain/login/model/user_model.dart';
 import 'package:notes_ignite/domain/login/usecase/login_usecase.dart';
 import 'package:notes_ignite/domain/note/model/importance_model.dart';
 import 'package:notes_ignite/i18n/i18n_const.dart';
+import 'package:notes_ignite/shared/alert_dialog_about/alert_dialog_about.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../shared/settings_widgets/cart_text_widget/card_text_widget.dart';
 import '/domain/note/usecase/note_usecase.dart';
 import '/domain/note/model/note_model.dart';
 import '/modules/notes/notes_state.dart';
@@ -16,18 +20,21 @@ import 'widgets/card_note/card_note_widget.dart';
 part 'notes_controller.g.dart';
 
 class NotesController extends _NotesControllerBase with _$NotesController {
-  NotesController();
+  NotesController({ILoginUseCase? loginUseCase, INoteUseCase? noteUseCase}) {
+    _loginUseCase = loginUseCase ?? LoginUseCase();
+    _noteUseCase = noteUseCase ?? NoteUseCase();
+  }
 }
 
 abstract class _NotesControllerBase with Store {
+  late ILoginUseCase _loginUseCase;
+
+  late INoteUseCase _noteUseCase;
+
   @observable
   NotesState state = NotesStateEmpty();
 
-  LoginUseCase loginUseCase = LoginUseCaseImpl();
-
-  List<NoteModel> notes = <NoteModel>[];
-
-  NoteUseCase noteUseCase = NoteUseCase();
+  ObservableList<NoteModel> notes = ObservableList<NoteModel>();
 
   Future<void> onEdit(
       {required BuildContext context,
@@ -70,7 +77,7 @@ abstract class _NotesControllerBase with Store {
   Future<void> showListNotes({required UserModel user}) async {
     try {
       state = NotesStateLoading();
-      List<NoteModel> listNotes = await noteUseCase.readAllNote(user: user);
+      List<NoteModel> listNotes = await _noteUseCase.readAllNote(user: user);
       state = NotesStateSuccess(notes: listNotes);
       notes.addAll(listNotes);
     } catch (e) {
@@ -92,7 +99,7 @@ abstract class _NotesControllerBase with Store {
 
   Future<int> onDeleted(int index, GlobalKey<AnimatedListState> _listKey,
       BuildContext context) async {
-    bool deleted = await noteUseCase.deleteNote(key: notes[index].id);
+    bool deleted = await _noteUseCase.deleteNote(key: notes[index].id);
     if (deleted) {
       NoteModel removedItem = notes.removeAt(index);
       AnimatedListRemovedItemBuilder builder;
@@ -119,7 +126,7 @@ abstract class _NotesControllerBase with Store {
   }
 
   Future<bool> confirmDismiss(int index, BuildContext context) async {
-    bool deleted = await noteUseCase.deleteNote(key: notes[index].id);
+    bool deleted = await _noteUseCase.deleteNote(key: notes[index].id);
     if (deleted) {
       snackBar(context, I18nConst.deletedItemSuccess, Colors.green);
     } else {
@@ -140,31 +147,76 @@ abstract class _NotesControllerBase with Store {
 
   Future<void> signOutGoogle(BuildContext context) async {
     try {
-      print("teste");
-      await loginUseCase.signOutGoogle();
+      await _loginUseCase.signOutGoogle();
       Navigator.pushReplacementNamed(context, RouterClass.login);
     } catch (e) {
-      print("Erro pra sair" + e.toString());
+      if (kDebugMode) {
+        print("Erro pra sair" + e.toString());
+      }
     }
   }
 
-  List<String> getListMenu() => [
-        I18nConst.menuAbout,
-        I18nConst.menuSettings,
-        I18nConst.menuLogout,
-      ];
+  Map<String, String> getListMenu() => {
+        "menuAbout": I18nConst.menuAbout,
+        "menuSettings": I18nConst.menuSettings,
+        "menuLogout": I18nConst.menuLogout,
+      };
 
-  void selectListMenu(BuildContext context, String value, UserModel user) {
-    if (value == I18nConst.menuAbout) {
-    } else if (value == I18nConst.menuLogout) {
+  void selectListMenu(
+      BuildContext context, String value, UserModel user) async {
+    if (value == "menuAbout") {
+      showDialogAbout(context);
+    } else if (value == "menuLogout") {
       signOutGoogle(context);
-    } else if (value == I18nConst.menuSettings) {
-      Navigator.pushNamed(context, RouterClass.settings, arguments: user);
+    } else if (value == "menuSettings") {
+      await Navigator.pushNamed(context, RouterClass.settings, arguments: user);
     }
+  }
+
+  void showDialogAbout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialogAbout(
+          title: 'Sobre',
+          back: 'Sair',
+          onPress: () => Navigator.pop(context),
+          children: const [
+            CardTextWidget(
+              title: "Desenvolvido por",
+              subtitle: "Uai Rodrigo Dev",
+              column: false,
+              textAlign: TextAlign.right,
+            ),
+            CardTextWidget(
+              title: "Instagram",
+              subtitle: "@_rodmoraes",
+              column: false,
+              textAlign: TextAlign.right,
+              icon: FontAwesomeIcons.instagram,
+            ),
+            CardTextWidget(
+              title: "Linkedin",
+              subtitle: "@rod-moraes",
+              column: false,
+              textAlign: TextAlign.right,
+              icon: FontAwesomeIcons.linkedin,
+            ),
+            CardTextWidget(
+              title: "Github",
+              subtitle: "@rod-moraes",
+              column: false,
+              textAlign: TextAlign.right,
+              icon: FontAwesomeIcons.github,
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void dispose() {
-    loginUseCase.dispose();
-    noteUseCase.dispose();
+    _loginUseCase.dispose();
+    _noteUseCase.dispose();
   }
 }

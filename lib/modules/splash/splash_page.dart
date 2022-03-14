@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import '/core/core.dart';
 import '/modules/splash/splash_controller.dart';
@@ -46,36 +47,38 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
-    double width = Orientation.portrait == orientation ? (100.w) : (112.h);
-    configController.colorStatus(isWhite: true);
-    return Container(
-      decoration: BoxDecoration(gradient: AppTheme.gradients.background),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: ScaleTransition(
-          scale: Tween<double>(begin: .85, end: 1).animate(
-            CurvedAnimation(
-              parent: animationControllerScale,
-              curve: const Interval(0, 1, curve: Curves.linear),
+    AppConfigController().colorStatus(isWhite: true);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: AppConfigController().colorStatus(isWhite: true),
+      sized: false,
+      child: Container(
+        decoration: BoxDecoration(gradient: AppTheme.gradients.background),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: ScaleTransition(
+            scale: Tween<double>(begin: .85, end: 1).animate(
+              CurvedAnimation(
+                parent: animationControllerScale,
+                curve: const Interval(0, 1, curve: Curves.linear),
+              ),
             ),
-          ),
-          child: RotationTransition(
-            turns: Tween<double>(
-              begin: 0,
-              end: 1,
-            ).animate(CurvedAnimation(
-              parent: animationControllerTranslate,
-              curve: const Interval(0.1, 1, curve: Curves.bounceOut),
-            )),
-            child: Center(
-              child: Container(
-                width: double.maxFinite,
-                height: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: width * 0.35),
-                child: Image.asset(
-                  AppTheme.images.logo,
-                  fit: BoxFit.contain,
+            child: RotationTransition(
+              turns: Tween<double>(
+                begin: 0,
+                end: 1,
+              ).animate(CurvedAnimation(
+                parent: animationControllerTranslate,
+                curve: const Interval(0.1, 1, curve: Curves.bounceOut),
+              )),
+              child: Center(
+                child: Container(
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  padding: EdgeInsets.symmetric(horizontal: 35.w),
+                  child: Image.asset(
+                    AppTheme.images.logo,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),

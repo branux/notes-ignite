@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_ignite/i18n/i18n_const.dart';
+import 'package:sizer/sizer.dart';
 
 import '/core/core.dart';
 
@@ -34,8 +35,9 @@ class _TextFormNoteWidgetState extends State<TextFormNoteWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double borderWidth = 0.3.w;
+    double borderRadius = 1.w;
     Widget textFormNoteWidget = Scrollbar(
-      key: UniqueKey(),
       controller: scrollController,
       showTrackOnHover: widget.isAlwaysShown,
       child: TextFormField(
@@ -54,20 +56,24 @@ class _TextFormNoteWidgetState extends State<TextFormNoteWidget> {
         decoration: InputDecoration(
           hintStyle: AppTheme.textStyles.textSimple,
           labelStyle: AppTheme.textStyles.textSimple,
+          errorStyle: AppTheme.textStyles.errorTextForm,
           labelText: widget.labelText,
           hintText: widget.hintText,
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(color: AppTheme.colors.border, width: 1)),
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide(
+                  color: AppTheme.colors.border, width: borderWidth)),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(color: AppTheme.colors.border, width: 1)),
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide(
+                  color: AppTheme.colors.border, width: borderWidth)),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(color: AppTheme.colors.border, width: 1)),
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide(
+                  color: AppTheme.colors.border, width: borderWidth)),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: Colors.red, width: 1),
+            borderRadius: BorderRadius.circular(borderRadius),
+            borderSide: BorderSide(color: Colors.red, width: borderWidth),
           ),
         ),
       ),

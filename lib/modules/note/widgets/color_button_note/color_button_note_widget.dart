@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:notes_ignite/core/core.dart';
 import 'package:notes_ignite/i18n/i18n_const.dart';
+import 'package:sizer/sizer.dart';
 
 class ColorButtonNoteWidget extends StatefulWidget {
   final VoidCallback onPressed;
@@ -41,16 +42,22 @@ class _ColorButtonNoteWidgetState extends State<ColorButtonNoteWidget>
   @override
   Widget build(BuildContext context) {
     _animationController.forward();
+    double borderWidth = 0.3.w;
     Widget colorButtonNoteWidget = AnimatedBuilder(
         animation: _animationColor,
         builder: (context, child) {
           return ElevatedButton(
-              onPressed: widget.onPressed,
+              onPressed: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+                widget.onPressed();
+              },
               style: ButtonStyle(
+                  minimumSize:
+                      MaterialStateProperty.all<Size>(Size(5.w, 24.sp)),
                   backgroundColor:
                       MaterialStateProperty.all<Color>(_animationColor.value),
-                  side: MaterialStateProperty.all<BorderSide>(
-                      BorderSide(color: AppTheme.colors.border, width: 1)),
+                  side: MaterialStateProperty.all<BorderSide>(BorderSide(
+                      color: AppTheme.colors.border, width: borderWidth)),
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                       EdgeInsets.zero)),
               child: SizedBox(

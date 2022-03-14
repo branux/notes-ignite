@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notes_ignite/core/core.dart';
@@ -11,14 +12,18 @@ import 'package:uuid/uuid.dart';
 part 'note_controller.g.dart';
 
 class NoteController extends _NoteControllerBase with _$NoteController {
-  NoteController();
+  NoteController({INoteRepository? repository}) {
+    _repository = repository ?? NoteRepository();
+  }
 }
 
 abstract class _NoteControllerBase with Store {
-  NoteRepository repository = NoteRepository();
+  late INoteRepository _repository;
 
   @observable
   NoteModel note = NoteModel.init();
+
+  NoteModel noteToUpdateNotesPage = NoteModel.init();
 
   Color lastColor = AppTheme.colors.colorsPicker.first;
 
@@ -27,24 +32,33 @@ abstract class _NoteControllerBase with Store {
   void textSaved(String? text) => note = note.copyWith(text: text);
 
   void popController(BuildContext context) {
-    Navigator.pop(context, note.id.isEmpty ? null : note);
+    Navigator.pop(context,
+        noteToUpdateNotesPage.id.isEmpty ? null : noteToUpdateNotesPage);
   }
 
   void lastColorSaved() => lastColor = note.background;
 
   @action
-  void createNote(GlobalKey<FormState> formKey, BuildContext context,
+  Future<void> modifyNote(GlobalKey<FormState> formKey, BuildContext context,
       UserModel user) async {
     if (formKey.currentState!.validate()) {
       bool isNew = note.id.isEmpty;
       formKey.currentState!.save();
-      note = note.copyWith(data: DateTime.now());
-      note = isNew
-          ? note.copyWith(id: "note" + user.id + const Uuid().v4())
-          : note;
+
       try {
-        bool isCreated = await repository.createNote(note: note);
+        bool isCreated = false;
+        if (isNew) {
+          note = note.copyWith(
+            id: "note" + user.id + const Uuid().v4(),
+            data: DateTime.now(),
+            idUser: user.id,
+          );
+          isCreated = await _repository.createNote(note: note);
+        } else {
+          isCreated = await _repository.updateNote(note: note);
+        }
         if (isCreated) {
+          noteToUpdateNotesPage = note.copyWith();
           snackBar(
             context,
             isNew ? I18nConst.saveSuccess : I18nConst.editSuccess,
@@ -65,7 +79,9 @@ abstract class _NoteControllerBase with Store {
         );
       }
     } else {
-      print("Not Validated");
+      if (kDebugMode) {
+        print("Not Validated");
+      }
     }
   }
 

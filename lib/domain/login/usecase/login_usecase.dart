@@ -1,23 +1,27 @@
+import 'package:flutter/foundation.dart';
+
 import '/domain/login/model/user_model.dart';
 import '/domain/login/repository/login_repository.dart';
 
-abstract class LoginUseCase {
+abstract class ILoginUseCase {
   Future<UserModel> googleSignIn();
   Future<bool> signOutGoogle();
   Future<UserModel> isConnectGoogle();
   void dispose();
 }
 
-class LoginUseCaseImpl implements LoginUseCase {
-  LoginRepository repository = LoginRepository();
+class LoginUseCase implements ILoginUseCase {
+  final ILoginRepository _repository;
+  LoginUseCase({ILoginRepository? repository})
+      : _repository = repository ?? LoginRepository();
 
   // LOGAR COM GOOGLE (USECASE VOCÊ PODE FAZER GERENCIAMENTO DO USER)
   @override
   Future<UserModel> googleSignIn() async {
     try {
       // LOGAR COM GOOGLE
-      UserModel user = await repository.googleSignIn();
-      await repository.authAddShared(user);
+      UserModel user = await _repository.googleSignIn();
+      await _repository.authAddShared(user);
       // throw "Teste falha";
       return user;
     } catch (e) {
@@ -29,12 +33,13 @@ class LoginUseCaseImpl implements LoginUseCase {
   @override
   Future<bool> signOutGoogle() async {
     try {
-      await repository.googleSignOut();
+      await _repository.googleSignOut();
 
-      return await repository.authDeleteShared();
+      return await _repository.authDeleteShared();
     } catch (e) {
-      print("aaaa user aaaa");
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return false;
     }
   }
@@ -42,7 +47,7 @@ class LoginUseCaseImpl implements LoginUseCase {
   @override
   Future<UserModel> isConnectGoogle() async {
     try {
-      UserModel auth = await repository.authSharedPreferences();
+      UserModel auth = await _repository.authSharedPreferences();
       return auth;
     } catch (e) {
       rethrow;
@@ -51,6 +56,6 @@ class LoginUseCaseImpl implements LoginUseCase {
 
   @override
   void dispose() {
-    repository.dispose();
+    _repository.dispose();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_ignite/core/core.dart';
+import 'package:sizer/sizer.dart';
 
 class SwitchSettingsTileWidget extends StatefulWidget {
   final Function(bool) onChanged;
@@ -33,6 +34,7 @@ class _SwitchSettingsTileWidgetState extends State<SwitchSettingsTileWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double borderWidth = 0.3.w;
     return Column(
       children: [
         SwitchListTile(
@@ -46,14 +48,16 @@ class _SwitchSettingsTileWidgetState extends State<SwitchSettingsTileWidget> {
           onChanged: (value) {
             switchValue = value;
             widget.onChanged(value);
-            setState(() {});
+            if (mounted) {
+              setState(() {});
+            }
           },
           value: switchValue,
         ),
         if (widget.hasDivider)
           Divider(
             color: AppTheme.colors.bodyDividerSettings,
-            thickness: 1,
+            thickness: borderWidth,
           ),
       ],
     );

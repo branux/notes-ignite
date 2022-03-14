@@ -13,6 +13,7 @@ abstract class AppColors {
   Color get border;
   Color get divider;
   Color get icon;
+  Color get textError;
   List<Color> get colorsPicker;
 
   //COLORS SETTINGS
@@ -65,6 +66,9 @@ class AppColorsLight implements AppColors {
 
   @override
   Color get icon => const Color(0xFFFFFFFF);
+
+  @override
+  Color get textError => Colors.red;
 
   @override
   List<Color> get colorsPicker => const [
@@ -151,6 +155,9 @@ class AppColorsDark implements AppColors {
 
   @override
   Color get icon => const Color(0xFFFFFFFF);
+
+  @override
+  Color get textError => Colors.red;
 
   @override
   List<Color> get colorsPicker => const [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 import 'package:notes_ignite/shared/settings_widgets/alert_dialog_settings/alert_dialog_settings.dart';
 import 'package:notes_ignite/shared/settings_widgets/card_perfil/card_perfil_widget.dart';
 import 'package:notes_ignite/shared/settings_widgets/icon_widget/icon_widget.dart';
@@ -6,6 +7,7 @@ import 'package:notes_ignite/shared/settings_widgets/settings_group/settings_gro
 import 'package:notes_ignite/shared/settings_widgets/simple_settings_tile/simple_settings_tile_widget.dart';
 import 'package:notes_ignite/shared/settings_widgets/switch_settings_tile/switch_settings_tile_widget.dart';
 import 'package:sizer/sizer.dart';
+import '../../shared/settings_widgets/drop_down_settings_tile/drop_down_settings_tile.dart';
 import '/core/core.dart';
 import '/domain/login/model/user_model.dart';
 import '/modules/settings/settings_controller.dart';
@@ -31,29 +33,36 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: AppTheme.colors.bodyBackgroundSettings,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(3.h),
           children: [
-            Stack(
-              children: [
-                Align(
-                  alignment: const Alignment(-1, -1),
-                  child: IconButton(
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    iconSize: 32,
+                    tooltip: I18nConst.quit,
+                    iconSize: 24.sp,
+                    padding: EdgeInsets.zero,
                     color: AppTheme.colors.appBarTitleSettings,
                     onPressed: () => Navigator.pop(context),
                   ),
-                ),
-                SizedBox(
-                  height: 44,
-                  child: Center(
-                    child: Text(
-                      "Configurações",
-                      style: AppTheme.textStyles.appBarTitleSettings,
+                  Expanded(
+                    child: Center(
+                      child: SizedBox(
+                        height: 32.sp,
+                        child: Text(
+                          I18nConst.configs,
+                          style: AppTheme.textStyles.appBarTitleSettings,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 24.sp,
+                  )
+                ],
+              ),
             ),
             CardPerfilWidget(
               user: widget.user,
@@ -71,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 icon: Icons.dark_mode,
                 backgroundColor: const Color(0xFF794BF6),
               ),
-              title: "Dark Mode",
+              title: I18nConst.darkMode,
               style: AppTheme.textStyles.bodyButtomTitleSettings,
               onChanged: (value) {
                 if (value) {
@@ -82,26 +91,30 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               switchValue: controllerTheme.themeMode == ThemeMode.dark,
             ),
+            SizedBox(height: 2.h),
+            DropDownSettingsTile<String>(
+              selected: settingsController.locale,
+              title: I18nConst.languageApp,
+              values: {
+                'es': I18nConst.spanish,
+                'en': I18nConst.english,
+                'pt': I18nConst.portuguese,
+              },
+              leading: IconWidget(
+                color: AppTheme.colors.bodyIconColorSettings,
+                icon: Icons.language_outlined,
+                backgroundColor: Colors.pinkAccent,
+              ),
+              onChanged: (value) async =>
+                  await settingsController.setLocale(value),
+            ),
             SizedBox(height: 2.5.h),
             SettingsGroup(
-              title: 'GENERAL',
+              title: I18nConst.general,
               style: AppTheme.textStyles.bodyTitleSettings,
               children: [
                 SimpleSettingsTile(
-                  title: "Notificações",
-                  subtitle: "",
-                  style: AppTheme.textStyles.bodyButtomTitleSettings,
-                  leading: IconWidget(
-                    color: AppTheme.colors.bodyIconColorSettings,
-                    icon: Icons.notifications,
-                    backgroundColor: Colors.redAccent,
-                  ),
-                  child: Container(),
-                  onTap: () {},
-                ),
-                SizedBox(height: 1.5.h),
-                SimpleSettingsTile(
-                  title: "Sair",
+                  title: I18nConst.logout,
                   subtitle: "",
                   style: AppTheme.textStyles.bodyButtomTitleSettings,
                   leading: IconWidget(
@@ -125,11 +138,11 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SizedBox(height: 1.5.h),
             SettingsGroup(
-              title: 'FEEDBACK',
+              title: I18nConst.feedback,
               style: AppTheme.textStyles.bodyTitleSettings,
               children: [
                 SimpleSettingsTile(
-                  title: "Reportar um bug",
+                  title: I18nConst.reportBug,
                   subtitle: "",
                   style: AppTheme.textStyles.bodyButtomTitleSettings,
                   leading: IconWidget(
@@ -141,7 +154,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SizedBox(height: 1.5.h),
                 SimpleSettingsTile(
-                  title: "Enviar FeedBack",
+                  title: I18nConst.sendFeedback,
                   subtitle: "",
                   style: AppTheme.textStyles.bodyButtomTitleSettings,
                   leading: IconWidget(

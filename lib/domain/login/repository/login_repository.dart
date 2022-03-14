@@ -5,27 +5,41 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../datasource/api_login_datasource.dart';
 import '../model/user_model.dart';
 
-class LoginRepository {
-  ApiLoginDatasource api = ApiLoginDatasource();
+abstract class ILoginRepository {
+  Future<UserModel> googleSignIn();
+  Future<void> googleSignOut();
+  Future<UserModel> authSharedPreferences();
+  Future<bool> authDeleteShared();
+  Future<bool> authAddShared(UserModel authModel);
+  void dispose();
+}
+
+class LoginRepository implements ILoginRepository {
+  final ApiLoginDatasource _api;
+  LoginRepository({ApiLoginDatasource? api})
+      : _api = api ?? ApiLoginDatasource();
 
   // LOGAR COM GOOGLE (REPOSITORY É PARA GERENCIAR A RESPOSTA DA API - TRANSFORMAR USERMODEL)
+  @override
   Future<UserModel> googleSignIn() async {
     try {
-      GoogleSignInAccount userGoogle = await api.googleSignIn();
+      GoogleSignInAccount userGoogle = await _api.googleSignIn();
       return UserModel.fromGoogleSignIn(userGoogle);
     } catch (e) {
       rethrow;
     }
   }
 
+  @override
   Future<void> googleSignOut() async {
     try {
-      return await api.googleSignOut();
+      return await _api.googleSignOut();
     } catch (e) {
       rethrow;
     }
   }
 
+  @override
   Future<UserModel> authSharedPreferences() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
 
@@ -39,10 +53,9 @@ class LoginRepository {
     }
   }
 
+  @override
   Future<bool> authDeleteShared() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
-
-    print("aaaa user aaaa");
     if (instance.containsKey("user")) {
       return await instance.remove("user");
     } else {
@@ -50,6 +63,7 @@ class LoginRepository {
     }
   }
 
+  @override
   Future<bool> authAddShared(UserModel authModel) async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
     try {
@@ -59,7 +73,8 @@ class LoginRepository {
     }
   }
 
+  @override
   void dispose() {
-    api.dispose();
+    _api.dispose();
   }
 }

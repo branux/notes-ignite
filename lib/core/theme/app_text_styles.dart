@@ -17,6 +17,8 @@ abstract class AppTextStyles {
   TextStyle get textSelect;
   TextStyle get textSnackBar;
   TextStyle get textAlertDialog;
+  TextStyle get textSlidableButton;
+  TextStyle get errorTextForm;
 
   /*---------------TEXTSTYLE SETTINGS---------------*/
   TextStyle get appBarTitleSettings;
@@ -24,6 +26,7 @@ abstract class AppTextStyles {
   TextStyle get bodyCardSubtitleSettings;
   TextStyle get bodyButtomTitleSettings;
   TextStyle get bodyTitleSettings;
+  TextStyle get titleAlertDialog;
 }
 
 class AppTextStylesDefault implements AppTextStyles {
@@ -38,9 +41,16 @@ class AppTextStylesDefault implements AppTextStyles {
 
   @override
   TextStyle get textAlertDialog => GoogleFonts.inter(
-        fontSize: 16.sp,
+        fontSize: 12.sp,
         fontWeight: FontWeight.w700,
         color: AppTheme.colors.textSimple,
+      );
+
+  @override
+  TextStyle get errorTextForm => GoogleFonts.inter(
+        fontSize: 10.sp,
+        fontWeight: FontWeight.w700,
+        color: AppTheme.colors.textError,
       );
 
   @override
@@ -58,8 +68,22 @@ class AppTextStylesDefault implements AppTextStyles {
       );
 
   @override
+  TextStyle get textSlidableButton => GoogleFonts.inter(
+        fontSize: 8.5.sp,
+        fontWeight: FontWeight.w500,
+        color: Colors.white,
+      );
+
+  @override
   TextStyle get textAppBar => GoogleFonts.montserrat(
         fontSize: 18.sp,
+        fontWeight: FontWeight.w700,
+        color: AppTheme.colors.textGradient,
+      );
+
+  @override
+  TextStyle get titleAlertDialog => GoogleFonts.montserrat(
+        fontSize: 16.sp,
         fontWeight: FontWeight.w700,
         color: AppTheme.colors.textGradient,
       );
@@ -101,14 +125,14 @@ class AppTextStylesDefault implements AppTextStyles {
 
   @override
   TextStyle get textSelect => GoogleFonts.inter(
-        fontSize: 8.sp,
+        fontSize: 8.5.sp,
         fontWeight: FontWeight.w600,
         color: AppTheme.colors.textSimple,
       );
 
   @override
   TextStyle get textSnackBar => GoogleFonts.inter(
-        fontSize: 12.sp,
+        fontSize: 10.sp,
         fontWeight: FontWeight.w600,
         color: Colors.white,
       );
@@ -119,7 +143,6 @@ class AppTextStylesDefault implements AppTextStyles {
     return GoogleFonts.notoSans(
       fontSize: 24.sp,
       fontWeight: FontWeight.w700,
-      height: 35.sp / 24.sp,
       color: AppTheme.colors.appBarTitleSettings,
     );
   }
@@ -127,9 +150,8 @@ class AppTextStylesDefault implements AppTextStyles {
   @override
   TextStyle get bodyButtomTitleSettings {
     return GoogleFonts.notoSans(
-      fontSize: 15.sp,
+      fontSize: 12.sp,
       fontWeight: FontWeight.w600,
-      height: 22.sp / 15.sp,
       color: AppTheme.colors.bodyCardTitleSettings,
     );
   }
@@ -137,9 +159,8 @@ class AppTextStylesDefault implements AppTextStyles {
   @override
   TextStyle get bodyCardSubtitleSettings {
     return GoogleFonts.notoSans(
-      fontSize: 12.sp,
+      fontSize: 10.sp,
       fontWeight: FontWeight.w600,
-      height: 18.sp / 12.sp,
       color: AppTheme.colors.bodyCardSubtitleSettings,
     );
   }
@@ -147,9 +168,8 @@ class AppTextStylesDefault implements AppTextStyles {
   @override
   TextStyle get bodyCardTitleSettings {
     return GoogleFonts.notoSans(
-      fontSize: 20.sp,
+      fontSize: 18.sp,
       fontWeight: FontWeight.w600,
-      height: 30.sp / 20.sp,
       color: AppTheme.colors.bodyCardTitleSettings,
     );
   }
@@ -157,9 +177,8 @@ class AppTextStylesDefault implements AppTextStyles {
   @override
   TextStyle get bodyTitleSettings {
     return GoogleFonts.notoSans(
-      fontSize: 12.sp,
+      fontSize: 10.sp,
       fontWeight: FontWeight.w700,
-      height: 18.sp / 12.sp,
       color: AppTheme.colors.bodyTitleSettings,
     );
   }

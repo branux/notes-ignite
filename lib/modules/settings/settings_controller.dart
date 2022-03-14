@@ -1,17 +1,34 @@
+import 'package:flutter/foundation.dart';
 import 'package:notes_ignite/domain/login/model/user_model.dart';
 import 'package:notes_ignite/domain/login/usecase/login_usecase.dart';
 
+import '../../core/core.dart';
+
 class SettingsController {
-  LoginUseCase authUseCase = LoginUseCaseImpl();
+  late ILoginUseCase _authUseCase;
+  late AppConfigController _controllerConfig;
+
+  SettingsController({ILoginUseCase? authUseCase}) {
+    _authUseCase = authUseCase ?? LoginUseCase();
+    _controllerConfig = AppConfigController();
+  }
+
   Future<bool> signOutGoogle() async {
     try {
-      await authUseCase.signOutGoogle();
+      await _authUseCase.signOutGoogle();
       return true;
     } catch (e) {
-      print("Erro pra sair" + e.toString());
+      if (kDebugMode) {
+        print("Erro pra sair" + e.toString());
+      }
       return false;
     }
   }
+
+  Future<void> setLocale(String? locale) async =>
+      await _controllerConfig.setStringLocale(locale);
+
+  String get locale => _controllerConfig.locale.languageCode;
 
   Map<String, dynamic> arguments({
     required UserModel user,
@@ -33,6 +50,6 @@ class SettingsController {
   // }
 
   void dispose() {
-    authUseCase.dispose();
+    _authUseCase.dispose();
   }
 }

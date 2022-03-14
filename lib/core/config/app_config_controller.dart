@@ -1,12 +1,20 @@
 //import 'package:firebase_core/firebase_core.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:localization/localization.dart';
+import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-//import '/firebase_options.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core.dart';
+//import '/firebase_options.dart';
+part 'app_config_controller.g.dart';
 
-class AppConfigController {
+enum StoreState { initial, loading, loaded }
+
+class AppConfigController extends _AppConfigControllerBase
+    with _$AppConfigController {
   static final AppConfigController _instance = AppConfigController._internal();
 
   // passes the instantiation to the _instance object
@@ -14,9 +22,89 @@ class AppConfigController {
 
   //initialize variables in here
   AppConfigController._internal();
+}
 
+abstract class _AppConfigControllerBase with Store {
   AppThemeController controllerAppTheme = AppThemeController();
   VersionInfo versionInfo = VersionInfo();
+
+  static Locale localeSystem() {
+    String deviceLanguage = Platform.localeName.substring(0, 2);
+    String deviceCountry = Platform.localeName.substring(3, 5);
+    return Locale(deviceLanguage, deviceCountry);
+  }
+
+  @observable
+  ObservableFuture<Locale>? _localeFuture;
+
+  @observable
+  Locale _locale = localeSystem();
+
+  @computed
+  Locale get locale => _locale;
+
+  @observable
+  String? errorMessage;
+
+  @computed
+  StoreState get state {
+    if (_localeFuture == null ||
+        _localeFuture!.status == FutureStatus.rejected) {
+      return StoreState.initial;
+    }
+    return _localeFuture!.status == FutureStatus.pending
+        ? StoreState.loading
+        : StoreState.loaded;
+  }
+
+  @action
+  Future<void> setLocale(Locale locale) async {
+    try {
+      errorMessage = null;
+
+      await LocalJsonLocalization.delegate.load(locale);
+      _localeFuture = ObservableFuture(saveLocale(locale));
+      // ObservableFuture extends Future - it can be awaited and exceptions will propagate as usual.
+      _locale = await _localeFuture!;
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+  }
+
+  @action
+  Future<void> setStringLocale(String? locale) async {
+    Locale? localeModify;
+    if (locale == 'es') {
+      localeModify = const Locale('es', 'ES');
+    } else if (locale == 'en') {
+      localeModify = const Locale('en', 'US');
+    } else if (locale == 'pt') {
+      localeModify = const Locale('pt', 'BR');
+    }
+    if (localeModify != null) await setLocale(localeModify);
+  }
+
+  Future<Locale> saveLocale(Locale locale) async {
+    final SharedPreferences instance = await SharedPreferences.getInstance();
+    await instance.setString("languageCode", locale.languageCode);
+    await instance.setString("countryCode", locale.countryCode ?? "");
+    return locale;
+  }
+
+  Future<void> currentLocale() async {
+    final SharedPreferences instance = await SharedPreferences.getInstance();
+    //instance.clear();
+    if (instance.containsKey("languageCode")) {
+      String languageCode = instance.getString("languageCode") as String;
+      String? countryCode;
+      if (instance.containsKey("countryCode")) {
+        countryCode = instance.getString("countryCode");
+      }
+      await setLocale(Locale(languageCode, countryCode));
+    } else {
+      await setLocale(_locale);
+    }
+  }
 
   SystemUiOverlayStyle colorStatus({required bool isWhite}) {
     if (controllerAppTheme.themeMode == ThemeMode.dark && !isWhite) {
@@ -39,6 +127,7 @@ class AppConfigController {
     // INICIA AS CORES DO TEMA
     try {
       await controllerAppTheme.currentThemeMode();
+      await currentLocale();
       return true;
     } catch (e) {
       return false;

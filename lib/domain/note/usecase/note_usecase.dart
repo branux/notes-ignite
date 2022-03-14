@@ -4,50 +4,69 @@ import 'package:notes_ignite/domain/note/model/note_model.dart';
 
 import '/domain/note/repository/note_repository.dart';
 
-class NoteUseCase {
-  NoteRepository repository = NoteRepository();
+abstract class INoteUseCase {
+  Future<bool> createNote({required NoteModel note});
+  Future<NoteModel> readNote({required String key});
+  Future<bool> updateNote({required NoteModel note});
+  Future<bool> deleteNote({required String key});
+  Future<List<NoteModel>> readAllNote({required UserModel user});
+  Future<List<NoteModel>> createAllNote({required List<NoteModel> notes});
+  Future<List<NoteModel>> updateAllNote({required List<NoteModel> notes});
+  Future<List<String>> deleteAllNote({required UserModel user});
+  void dispose();
+}
 
+class NoteUseCase implements INoteUseCase {
+  final INoteRepository _repository;
+  NoteUseCase({INoteRepository? repository})
+      : _repository = repository ?? NoteRepository();
+
+  @override
   Future<bool> createNote({required NoteModel note}) async {
     try {
-      return await repository.createNote(note: note);
+      return await _repository.createNote(note: note);
     } catch (e) {
       if (kDebugMode) print(e);
       return false;
     }
   }
 
+  @override
   Future<NoteModel> readNote({required String key}) async {
     try {
-      return await repository.readNote(key: key);
+      return await _repository.readNote(key: key);
     } catch (e) {
       rethrow;
     }
   }
 
+  @override
   Future<bool> updateNote({required NoteModel note}) async {
     try {
-      return await repository.updateNote(note: note);
+      return await _repository.updateNote(note: note);
     } catch (e) {
       if (kDebugMode) print(e);
       return false;
     }
   }
 
+  @override
   Future<bool> deleteNote({required String key}) async {
     try {
-      return await repository.deleteNote(key: key);
+      return await _repository.deleteNote(key: key);
     } catch (e) {
       if (kDebugMode) print(e);
       return false;
     }
   }
 
+  @override
   Future<List<NoteModel>> createAllNote(
       {required List<NoteModel> notes}) async {
     List<NoteModel> listNotes = [];
     try {
       for (NoteModel note in notes) {
-        bool isCreated = await repository.createNote(note: note);
+        bool isCreated = await _repository.createNote(note: note);
         if (isCreated) listNotes.add(note);
       }
       return listNotes;
@@ -57,12 +76,13 @@ class NoteUseCase {
     }
   }
 
+  @override
   Future<List<NoteModel>> readAllNote({required UserModel user}) async {
     List<NoteModel> listNote = [];
     try {
-      List<String> keysList = await repository.keys(user: user);
+      List<String> keysList = await _repository.keys(user: user);
       for (String key in keysList) {
-        listNote.add(await repository.readNote(key: key));
+        listNote.add(await _repository.readNote(key: key));
       }
       listNote.sort((a, b) {
         return -a.data.compareTo(b.data);
@@ -74,12 +94,13 @@ class NoteUseCase {
     }
   }
 
+  @override
   Future<List<NoteModel>> updateAllNote(
       {required List<NoteModel> notes}) async {
     List<NoteModel> listNotes = [];
     try {
       for (NoteModel note in notes) {
-        bool isUpdated = await repository.updateNote(note: note);
+        bool isUpdated = await _repository.updateNote(note: note);
         if (isUpdated) listNotes.add(note);
       }
       return listNotes;
@@ -89,12 +110,13 @@ class NoteUseCase {
     }
   }
 
+  @override
   Future<List<String>> deleteAllNote({required UserModel user}) async {
     List<String> listId = [];
     try {
-      List<String> keysList = await repository.keys(user: user);
+      List<String> keysList = await _repository.keys(user: user);
       for (String key in keysList) {
-        bool isDelete = await repository.deleteNote(key: key);
+        bool isDelete = await _repository.deleteNote(key: key);
         if (isDelete) listId.add(key);
       }
       return listId;
@@ -104,7 +126,8 @@ class NoteUseCase {
     }
   }
 
+  @override
   void dispose() {
-    repository.dispose();
+    _repository.dispose();
   }
 }

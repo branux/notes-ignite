@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import '/core/core.dart';
 
 class ButtonBottomBarWidget extends StatefulWidget {
@@ -20,12 +21,17 @@ class _ButtonBottomBarWidgetState extends State<ButtonBottomBarWidget> {
   late Widget buttonBottomBarWidget;
   @override
   void initState() {
+    double borderWidth = 0.3.w;
     buttonBottomBarWidget = InkWell(
-      onTap: widget.onPressed,
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+        widget.onPressed();
+      },
       child: Container(
         decoration: BoxDecoration(
-          border:
-              Border(top: BorderSide(color: AppTheme.colors.border, width: 1)),
+          border: Border(
+              top: BorderSide(
+                  color: AppTheme.colors.border, width: borderWidth)),
         ),
         child: Center(
           child: Text(

@@ -7,8 +7,10 @@ class TextFormCustom extends StatelessWidget {
   final String text;
   final String? label;
   final String? hintText;
+  final TextAlign textAlign;
   final int? maxLength;
   final bool expands;
+  final bool flexible;
   final bool divider;
   final bool disable;
   final bool disableForm;
@@ -20,6 +22,8 @@ class TextFormCustom extends StatelessWidget {
     this.divider = true,
     this.disable = false,
     this.disableForm = false,
+    this.flexible = false,
+    this.textAlign = TextAlign.left,
     this.label,
     this.hintText,
     this.maxLength,
@@ -46,11 +50,12 @@ class TextFormCustom extends StatelessWidget {
           )
         : InputBorder.none;
 
-    return TextFormField(
+    Widget textfield = TextFormField(
       readOnly: disable || disableForm,
       maxLength: maxLength,
       expands: expands,
       maxLines: null,
+      textAlign: textAlign,
       initialValue: Bidi.stripHtmlIfNeeded(text.replaceAll("<br />", "\n")),
       keyboardType: TextInputType.multiline,
       style: styleText,
@@ -69,5 +74,7 @@ class TextFormCustom extends StatelessWidget {
       ),
       onChanged: onChanged,
     );
+
+    return flexible ? Flexible(child: textfield) : textfield;
   }
 }

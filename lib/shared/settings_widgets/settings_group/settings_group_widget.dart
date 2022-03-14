@@ -62,19 +62,20 @@ class SettingsGroup extends StatelessWidget {
       ]);
     }
 
-    elements.add(SizedBox(
+    elements.add(const SizedBox(
       height: 14,
     ));
 
     elements.addAll(children);
 
-    if (hasDivider)
+    if (hasDivider) {
       elements.add(
         Divider(
           color: AppTheme.colors.bodyDividerSettings,
           thickness: 1,
         ),
       );
+    }
 
     return Wrap(
       children: <Widget>[
@@ -88,7 +89,7 @@ class SettingsGroup extends StatelessWidget {
   TextStyle groupStyle(BuildContext context) {
     return style ??
         TextStyle(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           fontSize: 15.0,
           fontWeight: FontWeight.bold,
         );
