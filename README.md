@@ -15,11 +15,11 @@
 
 Black App:
 
-https://raw.githubusercontent.com/rod-moraes/notes_ignite/main/github/black_app.mp4
+https://raw.githubusercontent.com/rod-moraes/notes-ignite/main/github/black_app.mp4
 
 White App:
 
-https://raw.githubusercontent.com/rod-moraes/notes_ignite/main/github/white_app.mp4
+https://raw.githubusercontent.com/rod-moraes/notes-ignite/main/github/white_app.mp4
 
 </p>
 
