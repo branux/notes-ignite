@@ -24,15 +24,17 @@ abstract class _LoginControllerBase with Store {
   Future<void> googleSignIn() async {
     try {
       // LOGAR COM GOOGLE
-      loginState = LoginStateLoading();
+      await _modifyLoginState(LoginStateLoading());
       UserModel userModel = await _loginUseCase.googleSignIn();
-      await Future.delayed(const Duration(seconds: 2));
-      loginState = LoginStateSuccess(user: userModel);
+      await _modifyLoginState(LoginStateSuccess(user: userModel));
     } catch (error) {
       loginState = LoginStateFailure(message: error.toString());
       if (kDebugMode) print(error);
     }
   }
+
+  @action
+  Future<void> _modifyLoginState(LoginState state) async => loginState = state;
 
   // FUNÇÃO PARA ABRIR O SNACKBAR
   void showSnackBar(BuildContext context) {

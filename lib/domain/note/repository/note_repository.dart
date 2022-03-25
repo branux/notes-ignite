@@ -50,7 +50,7 @@ class NoteRepository implements INoteRepository {
       // return await instance.setString(note.id, note.toJson());
     } catch (e) {
       if (kDebugMode) print(e);
-      return false;
+      rethrow;
     }
   }
 
@@ -82,10 +82,14 @@ class NoteRepository implements INoteRepository {
       // return await instance.setString(note.id, note.toJson());
 
       db.close();
-      return response >= 0;
+      if (response >= 0) {
+        return true;
+      } else {
+        throw I18nConst.editFailed;
+      }
     } catch (e) {
       if (kDebugMode) print(e);
-      return false;
+      throw I18nConst.editFailed;
     }
   }
 
@@ -102,7 +106,7 @@ class NoteRepository implements INoteRepository {
       return response >= 0;
     } catch (e) {
       if (kDebugMode) print(e);
-      return false;
+      rethrow;
     }
   }
 
@@ -121,7 +125,7 @@ class NoteRepository implements INoteRepository {
       db.close();
       return keysList;
     } catch (e) {
-      return [];
+      rethrow;
     }
   }
 

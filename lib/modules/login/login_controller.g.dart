@@ -32,6 +32,15 @@ mixin _$LoginController on _LoginControllerBase, Store {
     return _$googleSignInAsyncAction.run(() => super.googleSignIn());
   }
 
+  final _$_modifyLoginStateAsyncAction =
+      AsyncAction('_LoginControllerBase._modifyLoginState');
+
+  @override
+  Future<void> _modifyLoginState(LoginState state) {
+    return _$_modifyLoginStateAsyncAction
+        .run(() => super._modifyLoginState(state));
+  }
+
   @override
   String toString() {
     return '''

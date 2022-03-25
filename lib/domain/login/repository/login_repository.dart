@@ -59,7 +59,7 @@ class LoginRepository implements ILoginRepository {
     if (instance.containsKey("user")) {
       return await instance.remove("user");
     } else {
-      return false;
+      throw 'Erro delete user';
     }
   }
 

@@ -49,10 +49,9 @@ abstract class _NoteControllerBase with Store {
         bool isCreated = false;
         if (isNew) {
           note = note.copyWith(
-            id: "note" + user.id + const Uuid().v4(),
-            data: DateTime.now(),
-            idUser: user.id,
-          );
+              id: "note" + user.id + const Uuid().v4(),
+              data: DateTime.now(),
+              idUser: user.id);
           isCreated = await _repository.createNote(note: note);
         } else {
           isCreated = await _repository.updateNote(note: note);
@@ -60,28 +59,19 @@ abstract class _NoteControllerBase with Store {
         if (isCreated) {
           noteToUpdateNotesPage = note.copyWith();
           snackBar(
-            context,
-            isNew ? I18nConst.saveSuccess : I18nConst.editSuccess,
-            Colors.green,
-          );
+              context,
+              isNew ? I18nConst.saveSuccess : I18nConst.editSuccess,
+              Colors.green);
         } else {
-          snackBar(
-            context,
-            isNew ? I18nConst.saveFailed : I18nConst.editFailed,
-            Colors.red,
-          );
+          snackBar(context, isNew ? I18nConst.saveFailed : I18nConst.editFailed,
+              Colors.red);
         }
       } catch (e) {
-        snackBar(
-          context,
-          isNew ? I18nConst.saveFailed : I18nConst.editFailed,
-          Colors.red,
-        );
+        snackBar(context, isNew ? I18nConst.saveFailed : I18nConst.editFailed,
+            Colors.red);
       }
     } else {
-      if (kDebugMode) {
-        print("Not Validated");
-      }
+      if (kDebugMode) print("Not Validated");
     }
   }
 
