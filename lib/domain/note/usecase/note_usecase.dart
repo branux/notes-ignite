@@ -27,7 +27,7 @@ class NoteUseCase implements INoteUseCase {
       return await _repository.createNote(note: note);
     } catch (e) {
       if (kDebugMode) print(e);
-      return false;
+      rethrow;
     }
   }
 
@@ -46,7 +46,7 @@ class NoteUseCase implements INoteUseCase {
       return await _repository.updateNote(note: note);
     } catch (e) {
       if (kDebugMode) print(e);
-      return false;
+      rethrow;
     }
   }
 
@@ -56,7 +56,7 @@ class NoteUseCase implements INoteUseCase {
       return await _repository.deleteNote(key: key);
     } catch (e) {
       if (kDebugMode) print(e);
-      return false;
+      rethrow;
     }
   }
 
@@ -72,7 +72,7 @@ class NoteUseCase implements INoteUseCase {
       return listNotes;
     } catch (e) {
       if (kDebugMode) print(e);
-      return listNotes;
+      rethrow;
     }
   }
 
@@ -90,7 +90,7 @@ class NoteUseCase implements INoteUseCase {
       return listNote;
     } catch (e) {
       if (kDebugMode) print(e);
-      return listNote;
+      rethrow;
     }
   }
 
@@ -106,7 +106,7 @@ class NoteUseCase implements INoteUseCase {
       return listNotes;
     } catch (e) {
       if (kDebugMode) print(e);
-      return listNotes;
+      rethrow;
     }
   }
 
@@ -122,7 +122,7 @@ class NoteUseCase implements INoteUseCase {
       return listId;
     } catch (e) {
       if (kDebugMode) print(e);
-      return listId;
+      rethrow;
     }
   }
 

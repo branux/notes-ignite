@@ -37,10 +37,8 @@ class LoginUseCase implements ILoginUseCase {
 
       return await _repository.authDeleteShared();
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      return false;
+      if (kDebugMode) print(e);
+      rethrow;
     }
   }
 
