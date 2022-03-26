@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notes_ignite/core/core.dart';
-import 'package:sizer/sizer.dart';
 
 class AlertDialogAbout extends StatelessWidget {
   final VoidCallback onPress;

@@ -21,6 +21,9 @@ abstract class _AppThemeControllerBase with Store {
   @observable
   ThemeMode? _themeMode;
 
+  @observable
+  String? errorMessage;
+
   // QUANDO O TEMA É ALTERADO ELE INFORMA TODOS OS OBSERVERS EXTERNOS
   @computed
   ThemeMode get themeMode => _themeMode ?? ThemeMode.light;
@@ -28,32 +31,48 @@ abstract class _AppThemeControllerBase with Store {
   // SETA O TEMA NOVO QUANDO O USUARIO MUDAR
   // CASO TENHA ALGUM PROBLEMA SETA O TEMA COMO LIGHT
   @action
-  Future<void> setThemeMode(ThemeMode? themeMode) async =>
-      saveThemeMode(themeMode ?? ThemeMode.light);
+  Future<bool> setThemeMode(ThemeMode? themeMode) async {
+    try {
+      await saveThemeMode(themeMode ?? ThemeMode.light);
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      return false;
+    }
+  }
 
-  // ALTERA O TEMA SALVO NO SHARED PREFERENCES E MUDA O THEMA NO CONTROLLER
+  // ALTERA O TEMA SALVO NO SHARED PREFERENCES E MUDA O THEME NO CONTROLLER
   Future<void> saveThemeMode(ThemeMode themeMode) async {
-    _themeMode = themeMode;
-    final SharedPreferences instance = await SharedPreferences.getInstance();
-    instance.setString("themeMode", themeMode.index.toString());
-    return;
+    try {
+      final SharedPreferences instance = await SharedPreferences.getInstance();
+      await instance.setString("themeMode", themeMode.index.toString());
+      _themeMode = themeMode;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // PEGA O TEMA CASO EXISTA NO SHARED PREFERENCES
-  Future<void> currentThemeMode() async {
-    final SharedPreferences instance = await SharedPreferences.getInstance();
-    //instance.clear();
-    if (instance.containsKey("themeMode")) {
-      int index = int.parse(instance.get("themeMode") as String);
-      if (index == ThemeMode.dark.index) {
-        await setThemeMode(ThemeMode.dark);
-      } else if (index == ThemeMode.light.index) {
-        await setThemeMode(ThemeMode.light);
-      } else if (index == ThemeMode.system.index) {
-        await setThemeMode(ThemeMode.system);
+  Future<bool> currentThemeMode() async {
+    try {
+      final SharedPreferences instance = await SharedPreferences.getInstance();
+      late bool result;
+      if (instance.containsKey("themeMode")) {
+        String? themeMode = instance.getString("themeMode");
+        int index = int.parse(themeMode ?? "0");
+        if (index == ThemeMode.dark.index) {
+          result = await setThemeMode(ThemeMode.dark);
+        } else if (index == ThemeMode.light.index) {
+          result = await setThemeMode(ThemeMode.light);
+        } else {
+          result = await setThemeMode(ThemeMode.system);
+        }
+      } else {
+        result = await setThemeMode(null);
       }
-    } else {
-      await setThemeMode(null);
+      return result;
+    } catch (e) {
+      return false;
     }
   }
 }

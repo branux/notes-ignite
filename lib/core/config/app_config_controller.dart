@@ -58,21 +58,22 @@ abstract class _AppConfigControllerBase with Store {
   }
 
   @action
-  Future<void> setLocale(Locale locale) async {
+  Future<bool> setLocale(Locale locale) async {
     try {
       errorMessage = null;
-
       await LocalJsonLocalization.delegate.load(locale);
       _localeFuture = ObservableFuture(saveLocale(locale));
       // ObservableFuture extends Future - it can be awaited and exceptions will propagate as usual.
       _locale = await _localeFuture!;
+      return true;
     } catch (e) {
       errorMessage = e.toString();
+      return false;
     }
   }
 
   @action
-  Future<void> setStringLocale(String? locale) async {
+  Future<bool> setStringLocale(String? locale) async {
     Locale? localeModify;
     if (locale == 'es') {
       localeModify = const Locale('es', 'ES');
@@ -81,28 +82,41 @@ abstract class _AppConfigControllerBase with Store {
     } else if (locale == 'pt') {
       localeModify = const Locale('pt', 'BR');
     }
-    if (localeModify != null) await setLocale(localeModify);
+    try {
+      if (localeModify != null) await setLocale(localeModify);
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      return false;
+    }
   }
 
   Future<Locale> saveLocale(Locale locale) async {
-    final SharedPreferences instance = await SharedPreferences.getInstance();
-    await instance.setString("languageCode", locale.languageCode);
-    await instance.setString("countryCode", locale.countryCode ?? "");
-    return locale;
+    try {
+      final SharedPreferences instance = await SharedPreferences.getInstance();
+      await instance.setString("languageCode", locale.languageCode);
+      await instance.setString("countryCode", locale.countryCode ?? "");
+      return locale;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> currentLocale() async {
-    final SharedPreferences instance = await SharedPreferences.getInstance();
-    //instance.clear();
-    if (instance.containsKey("languageCode")) {
-      String languageCode = instance.getString("languageCode") as String;
-      String? countryCode;
-      if (instance.containsKey("countryCode")) {
-        countryCode = instance.getString("countryCode");
+    try {
+      final SharedPreferences instance = await SharedPreferences.getInstance();
+      if (instance.containsKey("languageCode")) {
+        String languageCode = instance.getString("languageCode") as String;
+        String? countryCode;
+        if (instance.containsKey("countryCode")) {
+          countryCode = instance.getString("countryCode");
+        }
+        await setLocale(Locale(languageCode, countryCode));
+      } else {
+        await setLocale(_locale);
       }
-      await setLocale(Locale(languageCode, countryCode));
-    } else {
-      await setLocale(_locale);
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -120,11 +134,6 @@ abstract class _AppConfigControllerBase with Store {
   }
 
   Future<bool> initialConfiguration() async {
-    // INICIA O FIREBASE
-    // await Firebase.initializeApp(
-    //   options: DefaultFirebaseOptions.currentPlatform,
-    // );
-    // INICIA AS CORES DO TEMA
     try {
       await controllerAppTheme.currentThemeMode();
       await currentLocale();

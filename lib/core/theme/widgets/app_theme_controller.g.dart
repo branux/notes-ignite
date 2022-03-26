@@ -32,17 +32,33 @@ mixin _$AppThemeController on _AppThemeControllerBase, Store {
     });
   }
 
+  final _$errorMessageAtom = Atom(name: '_AppThemeControllerBase.errorMessage');
+
+  @override
+  String? get errorMessage {
+    _$errorMessageAtom.reportRead();
+    return super.errorMessage;
+  }
+
+  @override
+  set errorMessage(String? value) {
+    _$errorMessageAtom.reportWrite(value, super.errorMessage, () {
+      super.errorMessage = value;
+    });
+  }
+
   final _$setThemeModeAsyncAction =
       AsyncAction('_AppThemeControllerBase.setThemeMode');
 
   @override
-  Future<void> setThemeMode(ThemeMode? themeMode) {
+  Future<bool> setThemeMode(ThemeMode? themeMode) {
     return _$setThemeModeAsyncAction.run(() => super.setThemeMode(themeMode));
   }
 
   @override
   String toString() {
     return '''
+errorMessage: ${errorMessage},
 themeMode: ${themeMode}
     ''';
   }

@@ -15,7 +15,7 @@ abstract class ILoginRepository {
 }
 
 class LoginRepository implements ILoginRepository {
-  final ApiLoginDatasource _api;
+  final IApiLoginDatasource _api;
   LoginRepository({ApiLoginDatasource? api})
       : _api = api ?? ApiLoginDatasource();
 
@@ -41,32 +41,35 @@ class LoginRepository implements ILoginRepository {
 
   @override
   Future<UserModel> authSharedPreferences() async {
-    final SharedPreferences instance = await SharedPreferences.getInstance();
-
-    if (instance.containsKey("user")) {
-      String? jsonUser = instance.getString("user");
-      if (jsonUser == null) throw I18nConst.loginNotFound;
-      UserModel authModel = UserModel.fromJson(jsonUser);
-      return authModel;
-    } else {
-      throw I18nConst.loginNotFound;
+    try {
+      final SharedPreferences instance = await SharedPreferences.getInstance();
+      if (instance.containsKey("user")) {
+        String? jsonUser = instance.getString("user");
+        if (jsonUser == null) throw I18nConst.loginNotFound;
+        UserModel authModel = UserModel.fromJson(jsonUser);
+        return authModel;
+      } else {
+        throw I18nConst.loginNotFound;
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
   @override
   Future<bool> authDeleteShared() async {
-    final SharedPreferences instance = await SharedPreferences.getInstance();
-    if (instance.containsKey("user")) {
+    try {
+      final SharedPreferences instance = await SharedPreferences.getInstance();
       return await instance.remove("user");
-    } else {
-      return false;
+    } catch (e) {
+      rethrow;
     }
   }
 
   @override
   Future<bool> authAddShared(UserModel authModel) async {
-    final SharedPreferences instance = await SharedPreferences.getInstance();
     try {
+      final SharedPreferences instance = await SharedPreferences.getInstance();
       return await instance.setString("user", authModel.toJson());
     } catch (e) {
       throw I18nConst.loginErroAdd([e.toString()]);

@@ -75,7 +75,7 @@ mixin _$AppConfigController on _AppConfigControllerBase, Store {
       AsyncAction('_AppConfigControllerBase.setLocale');
 
   @override
-  Future<void> setLocale(Locale locale) {
+  Future<bool> setLocale(Locale locale) {
     return _$setLocaleAsyncAction.run(() => super.setLocale(locale));
   }
 
@@ -83,7 +83,7 @@ mixin _$AppConfigController on _AppConfigControllerBase, Store {
       AsyncAction('_AppConfigControllerBase.setStringLocale');
 
   @override
-  Future<void> setStringLocale(String? locale) {
+  Future<bool> setStringLocale(String? locale) {
     return _$setStringLocaleAsyncAction
         .run(() => super.setStringLocale(locale));
   }

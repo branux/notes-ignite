@@ -17,7 +17,7 @@ class AppWidget extends StatefulWidget {
 
 class _AppWidgetState extends State<AppWidget> {
   final AppConfigController _controllerConfig = AppConfigController();
-  final AppThemeController _controller = AppThemeController();
+  final AppThemeController _controllerTheme = AppThemeController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _AppWidgetState extends State<AppWidget> {
           debugShowCheckedModeBanner: false,
           title: "Notes Ignite",
           // CONTROLLER USANDO MOBX PARA O TEMA
-          themeMode: _controller.themeMode,
+          themeMode: _controllerTheme.themeMode,
           // GERAÇÃO DE ROTAS DO APLICATIVO (COMEÇA NA '/')
           onGenerateRoute: RouterClass.generateRoute,
         );
