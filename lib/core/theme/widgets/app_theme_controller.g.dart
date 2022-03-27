@@ -16,6 +16,20 @@ mixin _$AppThemeController on _AppThemeControllerBase, Store {
       (_$themeModeComputed ??= Computed<ThemeMode>(() => super.themeMode,
               name: '_AppThemeControllerBase.themeMode'))
           .value;
+  Computed<Brightness>? _$brightnessComputed;
+
+  @override
+  Brightness get brightness =>
+      (_$brightnessComputed ??= Computed<Brightness>(() => super.brightness,
+              name: '_AppThemeControllerBase.brightness'))
+          .value;
+  Computed<bool>? _$isDarkModeComputed;
+
+  @override
+  bool get isDarkMode =>
+      (_$isDarkModeComputed ??= Computed<bool>(() => super.isDarkMode,
+              name: '_AppThemeControllerBase.isDarkMode'))
+          .value;
 
   final _$_themeModeAtom = Atom(name: '_AppThemeControllerBase._themeMode');
 
@@ -29,6 +43,21 @@ mixin _$AppThemeController on _AppThemeControllerBase, Store {
   set _themeMode(ThemeMode? value) {
     _$_themeModeAtom.reportWrite(value, super._themeMode, () {
       super._themeMode = value;
+    });
+  }
+
+  final _$_brightnessAtom = Atom(name: '_AppThemeControllerBase._brightness');
+
+  @override
+  Brightness? get _brightness {
+    _$_brightnessAtom.reportRead();
+    return super._brightness;
+  }
+
+  @override
+  set _brightness(Brightness? value) {
+    _$_brightnessAtom.reportWrite(value, super._brightness, () {
+      super._brightness = value;
     });
   }
 
@@ -51,15 +80,32 @@ mixin _$AppThemeController on _AppThemeControllerBase, Store {
       AsyncAction('_AppThemeControllerBase.setThemeMode');
 
   @override
-  Future<bool> setThemeMode(ThemeMode? themeMode) {
-    return _$setThemeModeAsyncAction.run(() => super.setThemeMode(themeMode));
+  Future<bool> setThemeMode(ThemeMode? themeModeModify) {
+    return _$setThemeModeAsyncAction
+        .run(() => super.setThemeMode(themeModeModify));
+  }
+
+  final _$_AppThemeControllerBaseActionController =
+      ActionController(name: '_AppThemeControllerBase');
+
+  @override
+  void setBrightness(Brightness? brightness) {
+    final _$actionInfo = _$_AppThemeControllerBaseActionController.startAction(
+        name: '_AppThemeControllerBase.setBrightness');
+    try {
+      return super.setBrightness(brightness);
+    } finally {
+      _$_AppThemeControllerBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override
   String toString() {
     return '''
 errorMessage: ${errorMessage},
-themeMode: ${themeMode}
+themeMode: ${themeMode},
+brightness: ${brightness},
+isDarkMode: ${isDarkMode}
     ''';
   }
 }

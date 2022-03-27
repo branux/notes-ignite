@@ -34,7 +34,6 @@ class LoginUseCase implements ILoginUseCase {
   Future<bool> signOutGoogle() async {
     try {
       await _repository.googleSignOut();
-
       return await _repository.authDeleteShared();
     } catch (e) {
       if (kDebugMode) print(e);

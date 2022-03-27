@@ -28,16 +28,17 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
-  final NoteController noteController = NoteController();
+  final NoteController _noteController = NoteController();
   final AppConfigController configController = AppConfigController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     if (widget.noteModel != null) {
-      noteController.note = widget.noteModel!.copyWith();
-      noteController.noteToUpdateNotesPage = widget.noteModel!.copyWith();
+      _noteController.note = widget.noteModel!.copyWith();
+      _noteController.noteToUpdateNotesPage = widget.noteModel!.copyWith();
     }
+    _noteController.autoRun(context);
     super.initState();
   }
 
@@ -69,7 +70,7 @@ class _NotePageState extends State<NotePage> {
                       iconSize: 6.w,
                       splashRadius: 6.w,
                       constraints: BoxConstraints(minWidth: 6.w),
-                      onPressed: () => noteController.popController(context),
+                      onPressed: () => _noteController.popController(context),
                     ),
                   ),
                   Expanded(
@@ -82,7 +83,7 @@ class _NotePageState extends State<NotePage> {
                             hintText: I18nConst.hintTitle,
                             initialValue: widget.noteModel?.title,
                             onSaved: (title) =>
-                                noteController.titleSaved(title),
+                                _noteController.titleSaved(title),
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.h),
@@ -91,14 +92,14 @@ class _NotePageState extends State<NotePage> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Observer(builder: (context) {
-                                    noteController.lastColorSaved();
+                                    _noteController.lastColorSaved();
                                     return ColorButtonNoteWidget(
                                       key: UniqueKey(),
-                                      onPressed: () => noteController
+                                      onPressed: () => _noteController
                                           .showDialogNote(context),
-                                      colorInit: noteController.lastColor,
+                                      colorInit: _noteController.lastColor,
                                       colorFinal:
-                                          noteController.note.background,
+                                          _noteController.note.background,
                                       expanded: true,
                                     );
                                   }),
@@ -106,9 +107,9 @@ class _NotePageState extends State<NotePage> {
                                   Observer(builder: (context) {
                                     return DropdownSelectNoteWidget(
                                       dropdownvalueInitial:
-                                          noteController.note.important,
+                                          _noteController.note.important,
                                       expanded: true,
-                                      onChanged: (value) => noteController
+                                      onChanged: (value) => _noteController
                                           .modifyDropdownvalue(value),
                                     );
                                   }),
@@ -124,7 +125,7 @@ class _NotePageState extends State<NotePage> {
                             initialValue: widget.noteModel?.text,
                             labelText: I18nConst.note,
                             hintText: I18nConst.hintNote,
-                            onSaved: (text) => noteController.textSaved(text),
+                            onSaved: (text) => _noteController.textSaved(text),
                           ),
                           SizedBox(height: 2.h),
                         ],
@@ -138,7 +139,7 @@ class _NotePageState extends State<NotePage> {
                         ButtonBottomBarWidget(
                           label: I18nConst.cancel.toUpperCase(),
                           onPressed: () =>
-                              noteController.popController(context),
+                              _noteController.popController(context),
                           expanded: true,
                         ),
                         VerticalDivider(
@@ -146,15 +147,24 @@ class _NotePageState extends State<NotePage> {
                             thickness: borderWidth,
                             color: AppTheme.colors.border),
                         Observer(builder: (context) {
-                          NoteModel note = noteController.note;
+                          NoteModel note = _noteController.note;
+
+                          print(note.id);
                           bool isSave = note.id == "";
                           return ButtonBottomBarWidget(
                             label: isSave
                                 ? I18nConst.save.toUpperCase()
                                 : I18nConst.edit.toUpperCase(),
                             key: UniqueKey(),
-                            onPressed: () => noteController.modifyNote(
-                                _formKey, context, widget.user),
+                            onPressed: () async {
+                              _noteController.modifyNote(
+                                await _noteController.isValid(
+                                  _formKey.currentState!.validate(),
+                                  () => _formKey.currentState!.save(),
+                                ),
+                                widget.user,
+                              );
+                            },
                             expanded: true,
                           );
                         }),

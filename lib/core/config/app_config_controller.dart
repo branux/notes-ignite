@@ -13,7 +13,7 @@ part 'app_config_controller.g.dart';
 
 enum StoreState { initial, loading, loaded }
 
-class AppConfigController extends _AppConfigControllerBase
+class AppConfigController extends AppConfigControllerBase
     with _$AppConfigController {
   static final AppConfigController _instance = AppConfigController._internal();
 
@@ -24,7 +24,7 @@ class AppConfigController extends _AppConfigControllerBase
   AppConfigController._internal();
 }
 
-abstract class _AppConfigControllerBase with Store {
+abstract class AppConfigControllerBase with Store {
   AppThemeController controllerAppTheme = AppThemeController();
   VersionInfo versionInfo = VersionInfo();
 
@@ -58,22 +58,21 @@ abstract class _AppConfigControllerBase with Store {
   }
 
   @action
-  Future<bool> setLocale(Locale locale) async {
+  Future<Locale> setLocale(Locale locale) async {
     try {
       errorMessage = null;
       await LocalJsonLocalization.delegate.load(locale);
       _localeFuture = ObservableFuture(saveLocale(locale));
-      // ObservableFuture extends Future - it can be awaited and exceptions will propagate as usual.
       _locale = await _localeFuture!;
-      return true;
+      return _locale;
     } catch (e) {
       errorMessage = e.toString();
-      return false;
+      throw "Erro ao modificar a linguagem";
     }
   }
 
   @action
-  Future<bool> setStringLocale(String? locale) async {
+  Future<Locale> setStringLocale(String? locale) async {
     Locale? localeModify;
     if (locale == 'es') {
       localeModify = const Locale('es', 'ES');
@@ -83,11 +82,14 @@ abstract class _AppConfigControllerBase with Store {
       localeModify = const Locale('pt', 'BR');
     }
     try {
-      if (localeModify != null) await setLocale(localeModify);
-      return true;
+      if (localeModify != null) {
+        return await setLocale(localeModify);
+      } else {
+        throw "Linguagem não existe!";
+      }
     } catch (e) {
       errorMessage = e.toString();
-      return false;
+      rethrow;
     }
   }
 
@@ -136,6 +138,7 @@ abstract class _AppConfigControllerBase with Store {
   Future<bool> initialConfiguration() async {
     try {
       await controllerAppTheme.currentThemeMode();
+      controllerAppTheme.listenBrightnessSystem();
       await currentLocale();
       return true;
     } catch (e) {

@@ -11,10 +11,17 @@ class LoginUseCaseMock extends mocktail.Mock implements ILoginUseCase {}
 void main() {
   late LoginController loginController;
   late ILoginUseCase loginUseCase;
+  late UserModel user;
   setUp(() {
     loginUseCase = LoginUseCaseMock();
     loginController = LoginController(
       loginUseCase: loginUseCase,
+    );
+    user = UserModel(
+      name: "Usuário Teste",
+      email: "usuario@teste.com.br",
+      id: "1",
+      photoUrl: 'teste.png',
     );
   });
 
@@ -22,24 +29,28 @@ void main() {
     final states = <LoginState>[];
     mobx.autorun((_) {
       states.add(loginController.loginState);
-      print(states);
     });
-    mocktail.when(loginUseCase).calls(#googleSignIn).thenAnswer((_) =>
-        Future.value(UserModel(email: '', id: '', name: '', photoUrl: '')));
+    mocktail
+        .when(loginUseCase)
+        .calls(#googleSignIn)
+        .thenAnswer((_) => Future.value(user));
 
     await loginController.googleSignIn();
     expect(states[0], isInstanceOf<LoginStateEmpty>());
     expect(states[1], isInstanceOf<LoginStateLoading>());
     expect(states[2], isInstanceOf<LoginStateSuccess>());
-    expect((loginController.loginState as LoginStateSuccess).user,
+    expect((loginController.loginState as LoginStateSuccess).result,
         isInstanceOf<UserModel>());
+    expect((loginController.loginState as LoginStateSuccess).result, user);
+    expect((loginController.loginState as LoginStateSuccess).message,
+        isInstanceOf<String>());
+    expect((loginController.loginState as LoginStateSuccess).message,
+        "Login success!");
   });
   test('Testando googleSignIn Failure', () async {
     final states = <LoginState>[];
     mobx.autorun((_) {
       states.add(loginController.loginState);
-
-      print(states);
     });
     mocktail.when(loginUseCase).calls(#googleSignIn).thenThrow('Erro no login');
 

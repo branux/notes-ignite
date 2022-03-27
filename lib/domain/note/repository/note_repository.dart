@@ -6,10 +6,10 @@ import 'package:sqflite/sqflite.dart';
 import '../model/note_model.dart';
 
 abstract class INoteRepository {
-  Future<bool> createNote({required NoteModel note});
+  Future<NoteModel> createNote({required NoteModel note});
   Future<NoteModel> readNote({required String key});
-  Future<bool> updateNote({required NoteModel note});
-  Future<bool> deleteNote({required String key});
+  Future<int> updateNote({required NoteModel note});
+  Future<int> deleteNote({required String key});
   Future<List<String>> keys({required UserModel user});
   void dispose();
 }
@@ -35,22 +35,21 @@ class NoteRepository implements INoteRepository {
         version: 1,
       );
   @override
-  Future<bool> createNote({required NoteModel note}) async {
+  Future<NoteModel> createNote({required NoteModel note}) async {
     try {
       Database db = await database();
-      int response = await db.insert(
+      int id = await db.insert(
         "Notes",
         note.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
 
       db.close();
-      return response >= 0;
-      // final SharedPreferences instance = await SharedPreferences.getInstance();
-      // return await instance.setString(note.id, note.toJson());
+      if (id < 0) throw I18nConst.saveFailed;
+      return note;
     } catch (e) {
       if (kDebugMode) print(e);
-      rethrow;
+      throw I18nConst.saveFailed;
     }
   }
 
@@ -68,25 +67,22 @@ class NoteRepository implements INoteRepository {
           ? throw I18nConst.notLocalizedNote
           : NoteModel.fromMap(response.first);
     } catch (e) {
-      rethrow;
+      throw I18nConst.notLocalizedNote;
     }
   }
 
   @override
-  Future<bool> updateNote({required NoteModel note}) async {
+  Future<int> updateNote({required NoteModel note}) async {
     try {
       Database db = await database();
-      int response = await db
+      int count = await db
           .update('Notes', note.toMap(), where: 'id = ?', whereArgs: [note.id]);
       // final SharedPreferences instance = await SharedPreferences.getInstance();
       // return await instance.setString(note.id, note.toJson());
 
       db.close();
-      if (response >= 0) {
-        return true;
-      } else {
-        throw I18nConst.editFailed;
-      }
+      if (count < 0) throw I18nConst.editFailed;
+      return count;
     } catch (e) {
       if (kDebugMode) print(e);
       throw I18nConst.editFailed;
@@ -94,19 +90,19 @@ class NoteRepository implements INoteRepository {
   }
 
   @override
-  Future<bool> deleteNote({required String key}) async {
+  Future<int> deleteNote({required String key}) async {
     try {
       Database db = await database();
-      int response =
-          await db.delete('Notes', where: 'id = ?', whereArgs: [key]);
+      int count = await db.delete('Notes', where: 'id = ?', whereArgs: [key]);
       // final SharedPreferences instance = await SharedPreferences.getInstance();
       // return await instance.remove(key);
 
       db.close();
-      return response >= 0;
+      if (count < 0) throw I18nConst.deletedItemFailed;
+      return count;
     } catch (e) {
       if (kDebugMode) print(e);
-      rethrow;
+      throw I18nConst.deletedItemFailed;
     }
   }
 
@@ -125,7 +121,7 @@ class NoteRepository implements INoteRepository {
       db.close();
       return keysList;
     } catch (e) {
-      rethrow;
+      throw "Erro ao localizar a key";
     }
   }
 

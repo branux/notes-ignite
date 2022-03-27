@@ -60,9 +60,10 @@ class LoginRepository implements ILoginRepository {
   Future<bool> authDeleteShared() async {
     try {
       final SharedPreferences instance = await SharedPreferences.getInstance();
-      return await instance.remove("user");
+      bool isRemoved = await instance.remove("user");
+      return isRemoved ? isRemoved : throw "Não foi possivel remover";
     } catch (e) {
-      rethrow;
+      throw "Não foi possivel remover";
     }
   }
 

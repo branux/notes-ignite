@@ -26,7 +26,8 @@ abstract class _LoginControllerBase with Store {
       // LOGAR COM GOOGLE
       await _modifyLoginState(LoginStateLoading());
       UserModel userModel = await _loginUseCase.googleSignIn();
-      await _modifyLoginState(LoginStateSuccess(user: userModel));
+      await _modifyLoginState(
+          LoginStateSuccess(result: userModel, message: "Login success!"));
     } catch (error) {
       loginState = LoginStateFailure(message: error.toString());
       if (kDebugMode) print(error);
@@ -37,14 +38,14 @@ abstract class _LoginControllerBase with Store {
   Future<void> _modifyLoginState(LoginState state) async => loginState = state;
 
   // FUNÇÃO PARA ABRIR O SNACKBAR
-  void showSnackBar(BuildContext context) {
+  void showSnackBar(BuildContext context, String text, Color color) {
     SnackBar snackBar = SnackBar(
       content: Text(
-        I18nConst.textErroSnackbar([(loginState as LoginStateFailure).message]),
+        text,
         textAlign: TextAlign.center,
         style: AppTheme.textStyles.textSnackBar,
       ),
-      backgroundColor: Colors.red,
+      backgroundColor: color,
     );
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
@@ -55,13 +56,17 @@ abstract class _LoginControllerBase with Store {
   void autoRun(BuildContext context) {
     autorun((_) {
       if (loginState is LoginStateFailure) {
-        showSnackBar(context);
+        String message = I18nConst.textErroSnackbar(
+            [(loginState as LoginStateFailure).message]);
+        showSnackBar(context, message, Colors.red);
       } else if (loginState is LoginStateSuccess) {
+        String message = (loginState as LoginStateSuccess).message;
+        showSnackBar(context, message, Colors.green);
         Navigator.pushNamedAndRemoveUntil(
           context,
           RouterClass.notes,
           (Route<dynamic> route) => false,
-          arguments: (loginState as LoginStateSuccess).user,
+          arguments: (loginState as LoginStateSuccess).result,
         );
       }
     });

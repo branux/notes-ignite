@@ -8,24 +8,24 @@ part of 'app_config_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$AppConfigController on _AppConfigControllerBase, Store {
+mixin _$AppConfigController on AppConfigControllerBase, Store {
   Computed<Locale>? _$localeComputed;
 
   @override
   Locale get locale =>
       (_$localeComputed ??= Computed<Locale>(() => super.locale,
-              name: '_AppConfigControllerBase.locale'))
+              name: 'AppConfigControllerBase.locale'))
           .value;
   Computed<StoreState>? _$stateComputed;
 
   @override
   StoreState get state =>
       (_$stateComputed ??= Computed<StoreState>(() => super.state,
-              name: '_AppConfigControllerBase.state'))
+              name: 'AppConfigControllerBase.state'))
           .value;
 
   final _$_localeFutureAtom =
-      Atom(name: '_AppConfigControllerBase._localeFuture');
+      Atom(name: 'AppConfigControllerBase._localeFuture');
 
   @override
   ObservableFuture<Locale>? get _localeFuture {
@@ -40,7 +40,7 @@ mixin _$AppConfigController on _AppConfigControllerBase, Store {
     });
   }
 
-  final _$_localeAtom = Atom(name: '_AppConfigControllerBase._locale');
+  final _$_localeAtom = Atom(name: 'AppConfigControllerBase._locale');
 
   @override
   Locale get _locale {
@@ -55,8 +55,7 @@ mixin _$AppConfigController on _AppConfigControllerBase, Store {
     });
   }
 
-  final _$errorMessageAtom =
-      Atom(name: '_AppConfigControllerBase.errorMessage');
+  final _$errorMessageAtom = Atom(name: 'AppConfigControllerBase.errorMessage');
 
   @override
   String? get errorMessage {
@@ -72,18 +71,18 @@ mixin _$AppConfigController on _AppConfigControllerBase, Store {
   }
 
   final _$setLocaleAsyncAction =
-      AsyncAction('_AppConfigControllerBase.setLocale');
+      AsyncAction('AppConfigControllerBase.setLocale');
 
   @override
-  Future<bool> setLocale(Locale locale) {
+  Future<Locale> setLocale(Locale locale) {
     return _$setLocaleAsyncAction.run(() => super.setLocale(locale));
   }
 
   final _$setStringLocaleAsyncAction =
-      AsyncAction('_AppConfigControllerBase.setStringLocale');
+      AsyncAction('AppConfigControllerBase.setStringLocale');
 
   @override
-  Future<bool> setStringLocale(String? locale) {
+  Future<Locale> setStringLocale(String? locale) {
     return _$setStringLocaleAsyncAction
         .run(() => super.setStringLocale(locale));
   }

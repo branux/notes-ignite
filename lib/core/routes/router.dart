@@ -36,13 +36,11 @@ class RouterClass {
 
       case notes:
         UserModel user = routeSettings.arguments as UserModel;
-        return MaterialPageRoute(
-            builder: (_) => NotesPage(key: UniqueKey(), userModel: user));
+        return MaterialPageRoute(builder: (_) => NotesPage(userModel: user));
 
       case settings:
         UserModel user = routeSettings.arguments as UserModel;
-        return MaterialPageRoute(
-            builder: (_) => SettingsPage(key: UniqueKey(), user: user));
+        return MaterialPageRoute(builder: (_) => SettingsPage(user: user));
 
       case note:
         Map<String, dynamic> arguments =
@@ -50,8 +48,7 @@ class RouterClass {
         UserModel user = arguments["user"];
         NoteModel? noteModel = arguments["note"];
         return MaterialPageRoute(
-            builder: (_) =>
-                NotePage(key: UniqueKey(), noteModel: noteModel, user: user));
+            builder: (_) => NotePage(noteModel: noteModel, user: user));
 
       // ROTA COM INICIAL DE CONFIGURAÇÕES
       case initial:

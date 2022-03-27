@@ -21,13 +21,19 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
-  final AppConfigController configController = AppConfigController();
-  final NotesController notesController = NotesController();
+  late GlobalKey<AnimatedListState> _listKey;
+  late AppConfigController configController;
+  late NotesController notesController;
 
   @override
   void initState() {
-    notesController.showListNotes(user: widget.userModel);
+    _listKey = GlobalKey<AnimatedListState>();
+    configController = AppConfigController();
+    notesController = NotesController();
+    notesController.autoRun(context);
+    notesController.showListNotes(
+        user: widget.userModel,
+        addNotes: (notes) => notesController.addNotes(notes, _listKey));
     super.initState();
   }
 
@@ -67,50 +73,43 @@ class _NotesPageState extends State<NotesPage> {
                 ),
               ),
             ),
-            Observer(builder: (_) {
-              Widget body = Container();
-              if (notesController.state is NotesStateLoading) {
-                body = Column(children: const [
-                  Center(child: CircularProgressIndicator())
-                ]);
-              } else if (notesController.state is NotesStateSuccess) {
-                body = AnimatedList(
-                  padding: const EdgeInsets.only(top: 10),
-                  key: _listKey,
-                  initialItemCount: notesController.notes.length,
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  itemBuilder: (context, index, animation) {
-                    return Column(
-                      children: [
-                        SlidableCardWidget(
-                          key: Key(notesController.notes[index].toString()),
-                          onDeleted: (context) => notesController.onDeleted(
-                              index, _listKey, context),
-                          onDismissed: () => notesController.onDismissed(
-                              index, context, _listKey),
-                          confirmDismiss: () =>
-                              notesController.confirmDismiss(index, context),
-                          note: notesController.notes[index],
-                          onEdit: (context) async {
-                            await notesController.onEdit(
-                                context: context,
-                                note: notesController.notes[index],
-                                index: index,
-                                user: widget.userModel);
-                          },
-                          onShared: (context) => notesController.onShared(
+            Observer(builder: (context) {
+              return AnimatedList(
+                padding: const EdgeInsets.only(top: 10),
+                key: _listKey,
+                initialItemCount: notesController.notes.length,
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                itemBuilder: (context, index, animation) {
+                  return Column(
+                    children: [
+                      SlidableCardWidget(
+                        key: Key(notesController.notes[index].toString()),
+                        onDeleted: (context) => notesController.onDeleted(
+                            notesController.notes[index].id,
+                            () => notesController.onAnimationDeletion(
+                                index, _listKey, context)),
+                        onDismissed: () => notesController.onDismissed(
+                            index, context, _listKey),
+                        confirmDismiss: () => notesController.confirmDismiss(
+                          notesController.notes[index].id,
+                        ),
+                        note: notesController.notes[index],
+                        onEdit: (context) => notesController.onEdit(
                             context: context,
                             note: notesController.notes[index],
-                          ),
+                            index: index,
+                            user: widget.userModel),
+                        onShared: (context) => notesController.onShared(
+                          context: context,
+                          note: notesController.notes[index],
                         ),
-                        const SizedBox(height: 20)
-                      ],
-                    );
-                  },
-                );
-              }
-              return body;
+                      ),
+                      const SizedBox(height: 20)
+                    ],
+                  );
+                },
+              );
             }),
           ],
         ),

@@ -1,6 +1,4 @@
 //LOGIN ABSTRATA PARA GENERALIZAR
-import '/domain/login/model/user_model.dart';
-
 abstract class LoginState {}
 
 //LOGIN VAZIA QUANDO INICIA
@@ -19,8 +17,10 @@ class LoginStateFailure extends LoginState {
 
 //LOGIN SUCESSO QUANDO DA SUCESSO O CARREGAMENTO
 class LoginStateSuccess extends LoginState {
-  final UserModel user;
+  final Object result;
+  final String message;
   LoginStateSuccess({
-    required this.user,
+    required this.result,
+    required this.message,
   });
 }

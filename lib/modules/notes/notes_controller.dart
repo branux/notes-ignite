@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -34,14 +33,99 @@ abstract class _NotesControllerBase with Store {
   @observable
   NotesState state = NotesStateEmpty();
 
+  @observable
   ObservableList<NoteModel> notes = ObservableList<NoteModel>();
+
+  @action
+  Future<void> modifyState(NotesState stateModify) async => state = stateModify;
+
+  @action
+  Future<void> showListNotes({
+    required UserModel user,
+    required Function(List<NoteModel>) addNotes,
+  }) async {
+    try {
+      await modifyState(NotesStateLoading());
+      List<NoteModel> listNotes = await _noteUseCase.readAllNote(user: user);
+      await modifyState(NotesStateSuccess(
+          message: "Lista carregada com sucesso", result: listNotes));
+      await addNotes(listNotes);
+    } catch (e) {
+      await modifyState(NotesStateFailure(message: e.toString()));
+    }
+  }
+
+  @action
+  Future<void> onDeleted(String key, Function onAnimationDeletion) async {
+    try {
+      await modifyState(NotesStateLoading());
+      final count = await _noteUseCase.deleteNote(key: key);
+      await onAnimationDeletion();
+      await modifyState(NotesStateSuccess(
+          message: I18nConst.deletedItemSuccess, result: count));
+    } catch (e) {
+      await modifyState(NotesStateFailure(message: e.toString()));
+    }
+  }
+
+  @action
+  Future<bool> confirmDismiss(String key) async {
+    try {
+      await modifyState(NotesStateLoading());
+      final count = await _noteUseCase.deleteNote(key: key);
+      await modifyState(NotesStateSuccess(
+          message: I18nConst.deletedItemSuccess, result: count));
+      return true;
+    } catch (e) {
+      await modifyState(
+          NotesStateFailure(message: I18nConst.deletedItemFailed));
+      return false;
+    }
+  }
+
+  @action
+  Future<void> signOutGoogle(VoidCallback navigation) async {
+    try {
+      await modifyState(NotesStateLoading());
+      final isLogout = await _loginUseCase.signOutGoogle();
+      await modifyState(NotesStateSuccess(
+          message: "Você foi deslogado com sucesso!", result: isLogout));
+      navigation();
+    } catch (e) {
+      await modifyState(NotesStateFailure(message: e.toString()));
+    }
+  }
+
+  Future<void> addNotes(
+    List<NoteModel> listNotes,
+    GlobalKey<AnimatedListState> _listKey,
+  ) async {
+    notes.insertAll(0, listNotes);
+    for (int offset = 0; offset < listNotes.length; offset++) {
+      int timeMiliseconds = 1000;
+      if (_listKey.currentState != null) {
+        _listKey.currentState!.insertItem(0 + offset,
+            duration: Duration(milliseconds: timeMiliseconds));
+      }
+    }
+  }
+
+  Future<void> onAnimationDeletion(int index,
+      GlobalKey<AnimatedListState> _listKey, BuildContext context) async {
+    NoteModel removedItem = notes.removeAt(index);
+    AnimatedListRemovedItemBuilder builder;
+    builder = (context, animation) => removeItem(removedItem, animation, index);
+
+    _listKey.currentState!.removeItem(index, builder,
+        duration: const Duration(milliseconds: 300));
+  }
 
   Future<void> onEdit(
       {required BuildContext context,
       required NoteModel note,
       required UserModel user,
       required int index}) async {
-    var noteModel = await Navigator.pushNamed(context, RouterClass.note,
+    final noteModel = await Navigator.pushNamed(context, RouterClass.note,
         arguments: {'user': user, 'note': note});
 
     if (noteModel is NoteModel) {
@@ -53,7 +137,7 @@ abstract class _NotesControllerBase with Store {
       {required BuildContext context,
       required UserModel user,
       required GlobalKey<AnimatedListState> key}) async {
-    var noteModel = await Navigator.pushNamed(context, RouterClass.note,
+    final noteModel = await Navigator.pushNamed(context, RouterClass.note,
         arguments: {'user': user});
 
     if (noteModel is NoteModel) {
@@ -74,17 +158,6 @@ abstract class _NotesControllerBase with Store {
         "${DateFormat('dd/MM/yyyy').format(note.data)}");
   }
 
-  Future<void> showListNotes({required UserModel user}) async {
-    try {
-      state = NotesStateLoading();
-      List<NoteModel> listNotes = await _noteUseCase.readAllNote(user: user);
-      state = NotesStateSuccess(notes: listNotes);
-      notes.addAll(listNotes);
-    } catch (e) {
-      state = NotesStateFailure(message: e.toString());
-    }
-  }
-
   Widget removeItem(NoteModel item, Animation<double> animation, int index) {
     return SizeTransition(
       sizeFactor: animation,
@@ -97,24 +170,6 @@ abstract class _NotesControllerBase with Store {
     );
   }
 
-  Future<int> onDeleted(int index, GlobalKey<AnimatedListState> _listKey,
-      BuildContext context) async {
-    bool deleted = await _noteUseCase.deleteNote(key: notes[index].id);
-    if (deleted) {
-      NoteModel removedItem = notes.removeAt(index);
-      AnimatedListRemovedItemBuilder builder;
-      builder =
-          (context, animation) => removeItem(removedItem, animation, index);
-
-      _listKey.currentState!.removeItem(index, builder,
-          duration: const Duration(milliseconds: 300));
-      snackBar(context, I18nConst.deletedItemSuccess, Colors.green);
-    } else {
-      snackBar(context, I18nConst.deletedItemFailed, Colors.red);
-    }
-    return index;
-  }
-
   void onDismissed(
     int index,
     BuildContext context,
@@ -123,16 +178,6 @@ abstract class _NotesControllerBase with Store {
     notes.removeAt(index);
     _listKey.currentState!
         .removeItem(index, (context, animation) => Container());
-  }
-
-  Future<bool> confirmDismiss(int index, BuildContext context) async {
-    bool deleted = await _noteUseCase.deleteNote(key: notes[index].id);
-    if (deleted) {
-      snackBar(context, I18nConst.deletedItemSuccess, Colors.green);
-    } else {
-      snackBar(context, I18nConst.deletedItemFailed, Colors.red);
-    }
-    return deleted;
   }
 
   void snackBar(BuildContext context, String text, Color color) {
@@ -145,29 +190,21 @@ abstract class _NotesControllerBase with Store {
     ));
   }
 
-  Future<void> signOutGoogle(BuildContext context) async {
-    try {
-      await _loginUseCase.signOutGoogle();
-      Navigator.pushReplacementNamed(context, RouterClass.login);
-    } catch (e) {
-      if (kDebugMode) {
-        print("Erro pra sair" + e.toString());
-      }
-    }
-  }
-
   Map<String, String> getListMenu() => {
         "menuAbout": I18nConst.menuAbout,
         "menuSettings": I18nConst.menuSettings,
         "menuLogout": I18nConst.menuLogout,
       };
 
+  void navigationToLogin(BuildContext context) =>
+      Navigator.pushReplacementNamed(context, RouterClass.login);
+
   void selectListMenu(
       BuildContext context, String value, UserModel user) async {
     if (value == "menuAbout") {
       showDialogAbout(context);
     } else if (value == "menuLogout") {
-      signOutGoogle(context);
+      signOutGoogle(() => navigationToLogin(context));
     } else if (value == "menuSettings") {
       await Navigator.pushNamed(context, RouterClass.settings, arguments: user);
     }
@@ -213,6 +250,16 @@ abstract class _NotesControllerBase with Store {
         );
       },
     );
+  }
+
+  void autoRun(BuildContext context) {
+    autorun((_) {
+      if (state is NotesStateFailure) {
+        snackBar(context, (state as NotesStateFailure).message, Colors.red);
+      } else if (state is NotesStateSuccess) {
+        snackBar(context, (state as NotesStateSuccess).message, Colors.green);
+      }
+    });
   }
 
   void dispose() {

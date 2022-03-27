@@ -13,19 +13,17 @@ class SplashController {
   void redirectSplash(BuildContext context) async {
     try {
       UserModel user = await _authUseCase.isConnectGoogle();
-      Future.delayed(const Duration(seconds: 3)).then((_) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          RouterClass.notes,
-          (Route<dynamic> route) => false,
-          arguments: user,
-        );
-      });
+      await Future.delayed(const Duration(seconds: 3));
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RouterClass.notes,
+        (Route<dynamic> route) => false,
+        arguments: user,
+      );
     } catch (e) {
-      Future.delayed(const Duration(seconds: 3)).then((_) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, RouterClass.login, (Route<dynamic> route) => false);
-      });
+      await Future.delayed(const Duration(seconds: 3));
+      Navigator.pushNamedAndRemoveUntil(
+          context, RouterClass.login, (Route<dynamic> route) => false);
     }
   }
 }
