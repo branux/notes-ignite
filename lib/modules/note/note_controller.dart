@@ -106,7 +106,7 @@ abstract class _NoteControllerBase with Store {
       await modifyState(NoteStateEmpty());
       return true;
     } else {
-      await modifyState(NoteStateFailure(message: "Dados não estão validos"));
+      await modifyState(NoteStateFailure(message: I18nConst.formDataValid));
       return false;
     }
   }

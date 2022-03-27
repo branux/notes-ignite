@@ -47,7 +47,7 @@ void main() {
     expect((controller.state as SettingsStateSuccess).message,
         isInstanceOf<String>());
     expect((controller.state as SettingsStateSuccess).message,
-        "Você foi deslogado com sucesso!");
+        I18nConst.logoutSuccess);
     expect((controller.state as SettingsStateSuccess).result,
         isInstanceOf<bool>());
     expect((controller.state as SettingsStateSuccess).result, true);
@@ -90,7 +90,7 @@ void main() {
     expect((controller.state as SettingsStateSuccess).message,
         isInstanceOf<String>());
     expect((controller.state as SettingsStateSuccess).message,
-        "Linguagem modificada com sucesso!");
+        I18nConst.localeModifySuccess);
     expect((controller.state as SettingsStateSuccess).result,
         isInstanceOf<Locale>());
     expect((controller.state as SettingsStateSuccess).result, locale);
@@ -104,7 +104,7 @@ void main() {
     mocktail
         .when(controllerConfig)
         .calls(#setStringLocale)
-        .thenThrow("Erro ao modificar a linguagem");
+        .thenThrow(I18nConst.errorModifyLocale);
 
     await controller.setLocale('pt');
     expect(states[0], isInstanceOf<SettingsStateEmpty>());
@@ -113,6 +113,6 @@ void main() {
     expect((controller.state as SettingsStateFailure).message,
         isInstanceOf<String>());
     expect((controller.state as SettingsStateFailure).message,
-        "Erro ao modificar a linguagem");
+        I18nConst.errorModifyLocale);
   });
 }

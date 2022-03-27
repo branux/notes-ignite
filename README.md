@@ -1,8 +1,9 @@
 <h1 align="center">
-  <img alt="Notes Splash" src="./github/note_splash.png" width="23%">
-  <img alt="Notes Page" src="./github/notes_page.png" width="23%">
-  <img alt="Sobre Page" src="./github/sobre_page.png" width="23%">
-  <img alt="Note Page" src="./github/note_page.png" width="23%">
+  <img alt="Notes Splash" src="./github/note_splash.png" width="18.5%">
+  <img alt="Notes Page" src="./github/notes_page.png" width="18.5%">
+  <img alt="Sobre Page" src="./github/sobre_page.png" width="18.5%">
+  <img alt="Note Page" src="./github/note_page.png" width="18.5%">
+  <img alt="Settings Page" src="./github/settings_page.png" width="18.5%">
 </h1>
 
 <h3 align="center">

@@ -55,7 +55,7 @@ void main() {
     expect((controller.state as NotesStateSuccess).message,
         isInstanceOf<String>());
     expect((controller.state as NotesStateSuccess).message,
-        "Lista carregada com sucesso");
+        I18nConst.listShowSuccess);
     expect((controller.state as NotesStateSuccess).result,
         isInstanceOf<List<NoteModel>>());
     expect((controller.state as NotesStateSuccess).result, [note]);
@@ -182,7 +182,7 @@ void main() {
     expect((controller.state as NotesStateSuccess).message,
         isInstanceOf<String>());
     expect((controller.state as NotesStateSuccess).message,
-        "Você foi deslogado com sucesso!");
+        I18nConst.logoutSuccess);
     expect(
         (controller.state as NotesStateSuccess).result, isInstanceOf<bool>());
     expect((controller.state as NotesStateSuccess).result, true);

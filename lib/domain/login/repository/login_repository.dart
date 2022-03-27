@@ -61,9 +61,9 @@ class LoginRepository implements ILoginRepository {
     try {
       final SharedPreferences instance = await SharedPreferences.getInstance();
       bool isRemoved = await instance.remove("user");
-      return isRemoved ? isRemoved : throw "Não foi possivel remover";
+      return isRemoved ? isRemoved : throw I18nConst.notRemoveUser;
     } catch (e) {
-      throw "Não foi possivel remover";
+      throw I18nConst.notRemoveUser;
     }
   }
 

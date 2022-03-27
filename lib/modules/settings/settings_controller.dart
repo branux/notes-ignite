@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notes_ignite/domain/login/model/user_model.dart';
@@ -35,7 +34,7 @@ abstract class _SettingsControllerBase with Store {
       await _modifySettingsState(SettingsStateLoading());
       final isLogin = await _authUseCase.signOutGoogle();
       await _modifySettingsState(SettingsStateSuccess(
-          message: "Você foi deslogado com sucesso!", result: isLogin));
+          message: I18nConst.logoutSuccess, result: isLogin));
       navigationLogin();
     } catch (e) {
       await _modifySettingsState(SettingsStateFailure(message: e.toString()));
@@ -48,7 +47,7 @@ abstract class _SettingsControllerBase with Store {
       await _modifySettingsState(SettingsStateLoading());
       final setLocale = await _controllerConfig.setStringLocale(locale);
       await _modifySettingsState(SettingsStateSuccess(
-          message: "Linguagem modificada com sucesso!", result: setLocale));
+          message: I18nConst.localeModifySuccess, result: setLocale));
     } catch (e) {
       await _modifySettingsState(SettingsStateFailure(message: e.toString()));
     }

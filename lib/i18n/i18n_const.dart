@@ -56,6 +56,21 @@ class I18nConst {
   static String get showMenu => 'show-menu'.i18n();
   static String get logout => 'logout'.i18n();
 
+  //to-do
+  static String get errorModifyLocale => 'error-modify-locale'.i18n();
+  static String get localeNotExist => 'locale-not-exist'.i18n();
+  static String get notRemoveUser => 'not-remove-user'.i18n();
+  static String get errorKey => 'error-key'.i18n();
+  static String get loginSuccess => 'login-success'.i18n();
+  static String get formDataValid => 'form-data-valid'.i18n();
+  static String get listShowSuccess => 'list-show-success'.i18n();
+  static String get logoutSuccess => 'logout-success'.i18n();
+  static String get errorLogout => 'error-logout'.i18n();
+  static String get errorLogin => 'error-login'.i18n();
+  static String get about => 'about'.i18n();
+  static String get desenvBy => 'desenv-by'.i18n();
+  static String get localeModifySuccess => 'locale-modify-success'.i18n();
+
   static String get notLocalizedNote => "not-localized-note".i18n();
 
   static String textErroSnackbar([List<String> arguments = const []]) =>

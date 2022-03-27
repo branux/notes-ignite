@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart' as mobx;
 import 'package:mocktail/mocktail.dart' as mocktail;
 import 'package:notes_ignite/domain/login/model/user_model.dart';
 import 'package:notes_ignite/domain/login/usecase/login_usecase.dart';
+import 'package:notes_ignite/i18n/i18n_const.dart';
 import 'package:notes_ignite/modules/login/login_controller.dart';
 import 'package:notes_ignite/modules/login/login_state.dart';
 
@@ -45,7 +46,7 @@ void main() {
     expect((loginController.loginState as LoginStateSuccess).message,
         isInstanceOf<String>());
     expect((loginController.loginState as LoginStateSuccess).message,
-        "Login success!");
+        I18nConst.loginSuccess);
   });
   test('Testando googleSignIn Failure', () async {
     final states = <LoginState>[];

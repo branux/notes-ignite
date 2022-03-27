@@ -48,7 +48,7 @@ abstract class _NotesControllerBase with Store {
       await modifyState(NotesStateLoading());
       List<NoteModel> listNotes = await _noteUseCase.readAllNote(user: user);
       await modifyState(NotesStateSuccess(
-          message: "Lista carregada com sucesso", result: listNotes));
+          message: I18nConst.listShowSuccess, result: listNotes));
       await addNotes(listNotes);
     } catch (e) {
       await modifyState(NotesStateFailure(message: e.toString()));
@@ -89,7 +89,7 @@ abstract class _NotesControllerBase with Store {
       await modifyState(NotesStateLoading());
       final isLogout = await _loginUseCase.signOutGoogle();
       await modifyState(NotesStateSuccess(
-          message: "Você foi deslogado com sucesso!", result: isLogout));
+          message: I18nConst.logoutSuccess, result: isLogout));
       navigation();
     } catch (e) {
       await modifyState(NotesStateFailure(message: e.toString()));
@@ -215,31 +215,31 @@ abstract class _NotesControllerBase with Store {
       context: context,
       builder: (BuildContext context) {
         return AlertDialogAbout(
-          title: 'Sobre',
-          back: 'Sair',
+          title: I18nConst.about,
+          back: I18nConst.quit,
           onPress: () => Navigator.pop(context),
-          children: const [
+          children: [
             CardTextWidget(
-              title: "Desenvolvido por",
+              title: I18nConst.desenvBy,
               subtitle: "Uai Rodrigo Dev",
               column: false,
               textAlign: TextAlign.right,
             ),
-            CardTextWidget(
+            const CardTextWidget(
               title: "Instagram",
               subtitle: "@_rodmoraes",
               column: false,
               textAlign: TextAlign.right,
               icon: FontAwesomeIcons.instagram,
             ),
-            CardTextWidget(
+            const CardTextWidget(
               title: "Linkedin",
               subtitle: "@rod-moraes",
               column: false,
               textAlign: TextAlign.right,
               icon: FontAwesomeIcons.linkedin,
             ),
-            CardTextWidget(
+            const CardTextWidget(
               title: "Github",
               subtitle: "@rod-moraes",
               column: false,

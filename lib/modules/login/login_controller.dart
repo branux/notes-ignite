@@ -26,8 +26,8 @@ abstract class _LoginControllerBase with Store {
       // LOGAR COM GOOGLE
       await _modifyLoginState(LoginStateLoading());
       UserModel userModel = await _loginUseCase.googleSignIn();
-      await _modifyLoginState(
-          LoginStateSuccess(result: userModel, message: "Login success!"));
+      await _modifyLoginState(LoginStateSuccess(
+          result: userModel, message: I18nConst.loginSuccess));
     } catch (error) {
       loginState = LoginStateFailure(message: error.toString());
       if (kDebugMode) print(error);

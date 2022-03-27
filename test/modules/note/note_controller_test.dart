@@ -130,6 +130,6 @@ void main() {
     expect(
         (controller.state as NoteStateFailure).message, isInstanceOf<String>());
     expect((controller.state as NoteStateFailure).message,
-        "Dados não estão validos");
+        I18nConst.formDataValid);
   });
 }

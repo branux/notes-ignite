@@ -25,7 +25,7 @@ class ApiLoginDatasource implements IApiLoginDatasource {
         throw I18nConst.loginNull;
       }
     } catch (error) {
-      rethrow;
+      throw I18nConst.errorLogin;
     }
   }
 
@@ -34,7 +34,7 @@ class ApiLoginDatasource implements IApiLoginDatasource {
     try {
       await _googleSignIn.signOut();
     } catch (e) {
-      rethrow;
+      throw I18nConst.errorLogout;
     }
   }
 

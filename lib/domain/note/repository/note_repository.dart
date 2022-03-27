@@ -121,7 +121,7 @@ class NoteRepository implements INoteRepository {
       db.close();
       return keysList;
     } catch (e) {
-      throw "Erro ao localizar a key";
+      throw I18nConst.errorKey;
     }
   }
 
